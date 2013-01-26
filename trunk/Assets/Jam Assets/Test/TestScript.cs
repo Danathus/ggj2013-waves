@@ -88,6 +88,7 @@ public class TestScript : MonoBehaviour {
 		// procedurally alter a pulse
 		Pulse mypulse = player[0].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.beatsPerSecond = 2;
+		mypulse.amplitude = 2;
 
 		/*
 		// create a star mesh
