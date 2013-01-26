@@ -13,7 +13,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		heartBeat = (AudioClip)Resources.Load ("GGJ13_Theme", typeof(AudioClip));
 		audio.clip = heartBeat;
-		audio.pitch = 2;
+		audio.pitch = 1.5;
 		audio.Play();
 
 	}
