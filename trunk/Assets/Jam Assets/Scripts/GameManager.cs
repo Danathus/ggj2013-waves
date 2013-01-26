@@ -68,7 +68,8 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		pressureField = new PressureField();
 		pressureField.init();
-		
+
+		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
 		planeMeshRenderer.material.mainTexture = pressureField.texture;
 	}
 
