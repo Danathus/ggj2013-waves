@@ -1,47 +1,61 @@
 using UnityEngine;
 using System.Collections;
 
-public class SpherePlayer
+public class WaveField // there can be only one!
 {
-	public GameObject gameObj;
-	public KeyCode up, down, left, right;
-	public string leftMoveAxis, rightMoveAxis;
-	public float unitsPerSecond = 10.0f;
-
-	public SpherePlayer()
+	// constant
+	public static int kNumBuffers = 2;
+	public static int kPointFieldWidth  = 10; // width of (square) field in points
+	public static int kPointFieldHeight = 10;
+	public static int kBufferSize = kPointFieldWidth*kPointFieldHeight;
+	public class WavePoint
 	{
+		Vector3 direction;
+		public WavePoint()
+		{
+			direction = Vector3.zero;
+		}
 	}
 
-	public void Initialize(KeyCode up, KeyCode left, KeyCode down, KeyCode right, string leftMoveAxis, string rightMoveAxis)
+	// these update regularly
+	WavePoint[] vectorField; // double buffered; 2 * height * width
+	int currBufferIdx;
+	public int nextBufferIdx
 	{
-		this.up = up;
-		this.left = left;
-		this.down = down;
-		this.right = right;
-		this.leftMoveAxis = leftMoveAxis;
-		this.rightMoveAxis = rightMoveAxis;
+		get { return (currBufferIdx+1)%kNumBuffers; }
+	}
+	
+	public WaveField()
+	{
+		vectorField = new WavePoint[kNumBuffers*kBufferSize];
+		for (int bufferIdx = 0; bufferIdx < kNumBuffers; ++bufferIdx)
+		{
+			for (int y = 0; y < kPointFieldHeight; ++y)
+			{
+				for (int x = 0; x < kPointFieldWidth; ++x)
+				{
+					vectorField[bufferIdx*kBufferSize+y*kPointFieldWidth+x] = new WavePoint();
+				}
+			}
+		}
+		currBufferIdx = 0;
 	}
 
-	public void Update()
+	WavePoint GetPoint(int bufferIdx, int x, int y)
 	{
-		Vector3 direction = Vector3.zero;
-		if (Input.GetKey(right)) {
-			direction += Vector3.right;
+		return vectorField[bufferIdx*kBufferSize + y*kPointFieldWidth + x];
+	}
+
+	void Update()
+	{
+		// propagate the wave fields
+		for (int y = 0; y < kPointFieldHeight; ++y)
+		{
+			for (int x = 0; x < kPointFieldWidth; ++x)
+			{
+				WavePoint curr = GetPoint(currBufferIdx, x, y);
+			}
 		}
-		if (Input.GetKey(left)) {
-			direction -= Vector3.right;
-		}
-		if (Input.GetKey(up)) {
-			direction += Vector3.up;
-		}
-		if (Input.GetKey(down)) {
-			direction -= Vector3.up;
-		}
-		
-		//
-		direction += new Vector3(Input.GetAxis(leftMoveAxis),Input.GetAxis(rightMoveAxis),0);
-		
-		gameObj.transform.position += direction * Time.deltaTime * unitsPerSecond;
 	}
 }
 
@@ -49,8 +63,7 @@ public class TestScript : MonoBehaviour {
 	
 	private float unitsPerSecond = 10.0f;
 	private int numPlayers = 4;
-	//GameObject[] player;
-	SpherePlayer[] player;
+	Player[] player;
 	
 	void Awake() {
 		
@@ -72,11 +85,13 @@ public class TestScript : MonoBehaviour {
 
 		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
 
-		player = new SpherePlayer[numPlayers];
+		//player = new SpherePlayer[numPlayers];
+		player = new Player[numPlayers];
 		//player = new GameObject[numPlayers];
 		for (int i = 0; i < numPlayers; ++i)
 		{
-			player[i] = new SpherePlayer();
+			//player[i] = new SpherePlayer();
+			player[i] = new Player();
 			player[i].gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
 			player[i].gameObj.transform.position += Vector3.right * i;
 		}
@@ -116,36 +131,11 @@ public class TestScript : MonoBehaviour {
 		//*/
 	}
 	
-	void ControlPlayer(GameObject obj, KeyCode up, KeyCode down, KeyCode left, KeyCode right)
-	{
-		Vector3 direction = Vector3.zero;
-		if (Input.GetKey(right)) {
-			direction += Vector3.right;
-		}
-		if (Input.GetKey(left)) {
-			direction -= Vector3.right;
-		}
-		if (Input.GetKey(up)) {
-			direction += Vector3.up;
-		}
-		if (Input.GetKey(down)) {
-			direction -= Vector3.up;
-		}
-		obj.transform.position += direction * Time.deltaTime * unitsPerSecond;
-	}
-	
 	// Update is called once per frame
 	void Update () {
 		for (int i = 0; i < numPlayers; ++i)
 		{
 			player[i].Update();
 		}
-		
-		/*
-		ControlPlayer(player[0].gameObj, KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow);
-		ControlPlayer(player[1].gameObj, KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D);
-		ControlPlayer(player[2].gameObj, KeyCode.T, KeyCode.G, KeyCode.F, KeyCode.H);
-		ControlPlayer(player[3].gameObj, KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L);
-		//*/
 	}
 }
