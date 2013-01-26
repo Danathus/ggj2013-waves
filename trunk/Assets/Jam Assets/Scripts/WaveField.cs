@@ -24,40 +24,16 @@ public class PressureField
 
     //window.addEventListener('load', init, false);
     
-    public void init(){
-		/*
-        canvas = document.getElementById('c');
-        canvas.width = WIDTH * scale;//"" + (WIDTH * scale) + "px";
-        canvas.height = HEIGHT * scale;//"" + (HEIGHT * scale) + "px";
-        context = canvas.getContext("2d");
-        context.scale(scale, scale);
-        
-        
-        lowResCanvas = document.createElement('canvas');
-        lowResCanvas.width = WIDTH;
-        lowResCanvas.height = HEIGHT;
-        
-        lowResContext = lowResCanvas.getContext('2d');
-        imageData = lowResContext.createImageData(WIDTH, HEIGHT);    
-        data = imageData.data;
-        //*/
-        
+    public void init()
+	{        
         tmpState1 = new int[TOTAL_PIXELS];
         tmpState2 = new int[TOTAL_PIXELS];
 		data = new Color[TOTAL_PIXELS];
 		
 		// create texture resolution at screen.width x screen.height
-
-		/*
-        document.onmousemove = onMouseMove;
-        document.ontouchmove = onTouchMove;
-        //*/
         
 		// djmc: uncomment when we're ready...
         seedWorld();
-		/*
-        Update();
-        //*/
 		
 		// duplicate the original texture and assign to the material
 		//Texture2D temp = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false);
@@ -71,6 +47,22 @@ public class PressureField
         //return data[y * ROW_STRIDE + x * 4 + 3];
 		return data[y*ROW_STRIDE + x];
     }
+	
+	public void SetPressure(int x, int y, int pressure) // think big, powers of 2
+	{
+		if(counter % 2 == 0)
+            tmpState1[y * WIDTH + x ] = pressure;
+        else
+            tmpState2[y * WIDTH + x ] = pressure;
+	}
+	
+	public int GetPressure(int x, int y)
+	{
+		if(counter % 2 == 0)
+            return tmpState1[y * WIDTH + x ];
+        else
+            return tmpState2[y * WIDTH + x ];
+	}
     
     void seedWorld()
     {
@@ -154,11 +146,6 @@ public class PressureField
             { 
                 //set the cell color
                 int val = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x] : tmpState1[y * WIDTH + x]) >> 4;
-
-				//if (x == 0 && y == 0)
-				//{
-				//	Debug.Log(val);
-				//}
                 
                 //clamp the value to the valid ranges.
                 if(val > 255 )
@@ -173,46 +160,6 @@ public class PressureField
             }
         }
 
-		/*
-        lowResContext.clearRect(0, 0, WIDTH, HEIGHT);
-        lowResContext.putImageData(imageData, 0, 0,0,0,WIDTH * scale,HEIGHT * scale);
-        //*/
-        
-        //context.clearRect(0, 0, WIDTH * scale,HEIGHT * scale);
-		/*
-        context.fillStyle = context.createPattern(lowResCanvas, 'repeat');
-        context.fillRect(0, 0, WIDTH * scale,HEIGHT * scale);
-        window.setTimeout(runLoop, 14);
-        //*/
-
-		/*
-	    // colors used to tint the first 3 mip levels
-	    Color[] colors = new Color[3];
-	    colors[0] = Color.red;
-	    colors[1] = Color.green;
-	    colors[2] = Color.blue;
-	    int mipCount = Mathf.Min(3, texture.mipmapCount);
-	
-	    // tint each mip level
-	    for(int mip = 0; mip < mipCount; ++mip)
-		{
-	        Color[] cols = texture.GetPixels(mip);
-	        for(int i = 0; i < cols.Length; ++i)
-			{
-	            //cols[i] = Color.Lerp(cols[i], colors[mip], 0.33f);
-				//cols[i] = Color.blue;
-				int y = i / ROW_STRIDE;
-				int x = i % ROW_STRIDE;
-				float brightness = (float)data[y * ROW_STRIDE + x * 4] / 255;
-				cols[i] = new Color(brightness, brightness, brightness, 255);
-				if (i == 0)
-				{
-					//Debug.Log(data[y * ROW_STRIDE + x * 4]);
-				}
-	        }
-	        texture.SetPixels(cols, mip);
-	    }
-	    //*/
 		texture.SetPixels(data, 0);
 	
 	    // actually apply all SetPixels, don't recalculate mip levels
