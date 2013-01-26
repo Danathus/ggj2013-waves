@@ -42,26 +42,36 @@ public class PressureField
 	    //renderer.material.mainTexture = texture;
     }
     
+	/*
     Color getColor(int x, int y)
     {
         //return data[y * ROW_STRIDE + x * 4 + 3];
 		return data[y*ROW_STRIDE + x];
     }
+    //*/
 	
-	public void SetPressure(int x, int y, int pressure) // think big, powers of 2
+	public void SetPressure(float x, float y, int pressure) // think big, powers of 2
 	{
+		// todo: need to convert between real-space and grid-space
+		//x / (Screen.width/2)
+		int grid_x = (int)x;
+		int grid_y = (int)y;
 		if(counter % 2 == 0)
-            tmpState1[y * WIDTH + x ] = pressure;
+            tmpState1[grid_y * WIDTH + grid_x ] = pressure;
         else
-            tmpState2[y * WIDTH + x ] = pressure;
+            tmpState2[grid_y * WIDTH + grid_x ] = pressure;
 	}
 	
-	public int GetPressure(int x, int y)
+	public int GetPressure(float x, float y)
 	{
+		// todo: need to convert between real-space and grid-space
+		//x / (Screen.width/2)
+		int grid_x = (int)x;
+		int grid_y = (int)y;
 		if(counter % 2 == 0)
-            return tmpState1[y * WIDTH + x ];
+            return tmpState1[grid_y * WIDTH + grid_x ];
         else
-            return tmpState2[y * WIDTH + x ];
+            return tmpState2[grid_y * WIDTH + grid_x ];
 	}
     
     void seedWorld()
