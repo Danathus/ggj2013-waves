@@ -6,7 +6,7 @@ public class TestXBoxControl : MonoBehaviour {
 	private float unitsPerSecond = 10.0f;
 	GameObject[] player;
 	
-	AudioClip heartBeat;
+	//AudioClip heartBeat;
 	
 	// Use this for initialization
 	void Start () {
@@ -14,7 +14,7 @@ public class TestXBoxControl : MonoBehaviour {
 
 		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
 
-		heartBeat = (AudioClip)Resources.Load ("GGJ13_Theme", typeof(AudioClip));
+		//heartBeat = (AudioClip)Resources.Load ("GGJ13_Theme", typeof(AudioClip));
 		
 		int numPlayers = 4;
 		player = new GameObject[numPlayers];
@@ -63,7 +63,7 @@ public class TestXBoxControl : MonoBehaviour {
 		//	Debug.Log("L_XAxis_4");
 		player[3].transform.Translate(0,Input.GetAxis("L_YAxis_4") * Time.deltaTime * unitsPerSecond, 0);
 		
-		AudioSource.PlayClipAtPoint(heartBeat, Camera.main.transform.position);
+		//AudioSource.PlayClipAtPoint(heartBeat, Camera.main.transform.position);
 		//if(Input.GetAxis("L_YAxis_4") > 0.5)
 		//	Debug.Log("L_YAxis_4");
 		/*if (Input.GetKey(KeyCode.LeftArrow)) {
