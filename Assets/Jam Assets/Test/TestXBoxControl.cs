@@ -35,11 +35,32 @@ public class TestXBoxControl : MonoBehaviour {
 		//	direction += new Vector3(Input.GetAxis("Horizontal"),0,0);
 		}*/
 		player[0].transform.Translate (Input.GetAxis ("L_XAxis_1") *Time.deltaTime * unitsPerSecond,0,0);
+		//if(Input.GetAxis("L_XAxis_1") > 0.5)
+		//	Debug.Log("L_XAxis_1");
 		player[0].transform.Translate(0,Input.GetAxis("L_YAxis_1") * Time.deltaTime * unitsPerSecond, 0);
+		//if(Input.GetAxis("L_YAxis_1") > 0.5)
+		//	Debug.Log("L_YAxis_1");
 		
 		player[1].transform.Translate (Input.GetAxis ("L_XAxis_2") *Time.deltaTime * unitsPerSecond,0,0);
+		//if(Input.GetAxis("L_XAxis_2") > 0.5)
+		//	Debug.Log("L_XAxis_2");
 		player[1].transform.Translate(0,Input.GetAxis("L_YAxis_2") * Time.deltaTime * unitsPerSecond, 0);
+		//if(Input.GetAxis("L_YAxis_2") > 0.5)
+		//	Debug.Log("L_YAxis_2");
 		
+		player[2].transform.Translate (Input.GetAxis ("L_XAxis_3") *Time.deltaTime * unitsPerSecond,0,0);
+		//if(Input.GetAxis("L_XAxis_3") > 0.5)
+		//	Debug.Log("L_XAxis_3");
+		player[2].transform.Translate(0,Input.GetAxis("L_YAxis_3") * Time.deltaTime * unitsPerSecond, 0);
+		//if(Input.GetAxis("L_YAxis_3") > 0.5)
+		//	Debug.Log("L_YAxis_3");
+		
+		player[3].transform.Translate (Input.GetAxis ("L_XAxis_4") *Time.deltaTime * unitsPerSecond,0,0);
+		//if(Input.GetAxis("L_XAxis_4") > 0.5)
+		//	Debug.Log("L_XAxis_4");
+		player[3].transform.Translate(0,Input.GetAxis("L_YAxis_4") * Time.deltaTime * unitsPerSecond, 0);
+		//if(Input.GetAxis("L_YAxis_4") > 0.5)
+		//	Debug.Log("L_YAxis_4");
 		/*if (Input.GetKey(KeyCode.LeftArrow)) {
 			direction -= Vector3.right;
 		}
