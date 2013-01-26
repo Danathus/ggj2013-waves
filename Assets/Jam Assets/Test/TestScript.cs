@@ -4,6 +4,7 @@ using System.Collections;
 public class TestScript : MonoBehaviour {
 	
 	private float unitsPerSecond = 10.0f;
+	GameObject obj;
 	
 	void Awake() {
 		
@@ -12,26 +13,32 @@ public class TestScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Camera.main.transform.position += Vector3.back * 10;
+
+		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
+		obj = (GameObject)GameObject.Instantiate(spherePrefab);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+		Vector3 direction = Vector3.zero;
+
 		if (Input.GetKey(KeyCode.RightArrow)) {
-			transform.position += Vector3.right * Time.deltaTime * unitsPerSecond;
+			direction += Vector3.right;
 		}
 		
 		if (Input.GetKey(KeyCode.LeftArrow)) {
-			transform.position += -Vector3.right * Time.deltaTime * unitsPerSecond;
+			direction -= Vector3.right;
 		}
 		
 		if (Input.GetKey(KeyCode.UpArrow)) {
-			transform.position += Vector3.up * Time.deltaTime * unitsPerSecond;
+			direction += Vector3.up;
 		}
 		
 		if (Input.GetKey(KeyCode.DownArrow)) {
-			transform.position += -Vector3.up * Time.deltaTime * unitsPerSecond;
+			direction -= Vector3.up;
 		}
 
+		obj.transform.position += direction * Time.deltaTime * unitsPerSecond;
 	}
 }
