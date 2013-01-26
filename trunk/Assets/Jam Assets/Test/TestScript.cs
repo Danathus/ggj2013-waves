@@ -4,6 +4,7 @@ using System.Collections;
 public class TestScript : MonoBehaviour {
 	
 	private float unitsPerSecond = 10.0f;
+	fixed GameObject player[4];
 	GameObject obj;
 	
 	void Awake() {
@@ -38,6 +39,8 @@ public class TestScript : MonoBehaviour {
 		if (Input.GetKey(KeyCode.DownArrow)) {
 			direction -= Vector3.up;
 		}
+		Input.GetButtonDown("Fire1")
+		
 
 		obj.transform.position += direction * Time.deltaTime * unitsPerSecond;
 	}
