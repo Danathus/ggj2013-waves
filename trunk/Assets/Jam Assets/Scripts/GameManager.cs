@@ -7,7 +7,9 @@ public class GameManager : MonoSingleton<GameManager> {
 	public MeshRenderer planeMeshRenderer;
 
 	AudioClip heartBeat;
-
+	
+	Material[] matColor;
+	
 	private int numPlayers = 4;
 	Player[] player;
 	PressureField pressureField;
@@ -22,11 +24,23 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		Camera.main.transform.position += Vector3.back * 10;
 		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
+		matColor = new Material[numPlayers];
+		for(int i = 0; i < numPlayers; ++i){
+			matColor[i] = (Material)Resources.Load ("mat" + i, typeof(Material));
+		}
+		
+		matColor[0].color = Color.black;
+		matColor[1].color = Color.green;
+		matColor[2].color = Color.red;
+		matColor[3].color = Color.yellow;
+		//matColor = (Material)Resources.Load ("mat", typeof(Material));
+		//matColor.color = Color.blue;
 		player = new Player[numPlayers];
 		for (int i = 0; i < numPlayers; ++i)
 		{
 			player[i] = new Player();
 			player[i].gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
+			player[i].gameObj.renderer.material = matColor[i];
 			player[i].gameObj.transform.position += Vector3.right * i;
 		}
 		player[0].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, "L_XAxis_1", "L_YAxis_1");
