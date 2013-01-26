@@ -4,7 +4,7 @@ using System.Collections;
 public class GameManager : MonoSingleton<GameManager> {
 	
 	public float testValue = 1.0f;
-	public MeshRenderer planeMeshRenderer;
+	private MeshRenderer planeMeshRenderer;
 
 	AudioClip heartBeat;
 	
@@ -68,7 +68,8 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		pressureField = new PressureField();
 		pressureField.init();
-
+		
+		planeMeshRenderer = (MeshRenderer)((GameObject)GameObject.Instantiate(Resources.Load("waveMesh"))).renderer;
 		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
 		planeMeshRenderer.material.mainTexture = pressureField.texture;
 	}
