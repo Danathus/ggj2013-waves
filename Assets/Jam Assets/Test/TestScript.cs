@@ -5,8 +5,6 @@ public class TestScript : MonoBehaviour {
 	
 	//private float unitsPerSecond = 10.0f;
 	
-	PressureField pressureField;
-	
 	void Awake() {
 		
 	}
@@ -47,9 +45,6 @@ public class TestScript : MonoBehaviour {
 		go.AddComponent(typeof(MeshRenderer));
 		go.name = "Wave";
 		//*/
-
-		pressureField = new PressureField();
-		pressureField.init();
 	}
 	
 	// Update is called once per frame

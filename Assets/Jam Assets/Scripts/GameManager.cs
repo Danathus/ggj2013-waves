@@ -4,11 +4,13 @@ using System.Collections;
 public class GameManager : MonoSingleton<GameManager> {
 	
 	public float testValue = 1.0f;
+	public MeshRenderer planeMeshRenderer;
 
 	AudioClip heartBeat;
 
 	private int numPlayers = 4;
 	Player[] player;
+	PressureField pressureField;
 	
 	// Use this for initialization
 	void Start () {
@@ -36,6 +38,11 @@ public class GameManager : MonoSingleton<GameManager> {
 		Pulse mypulse = player[0].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.beatsPerSecond = 2;
 		mypulse.amplitude = 2;
+
+		pressureField = new PressureField();
+		pressureField.init();
+		
+		planeMeshRenderer.material.mainTexture = pressureField.texture;
 	}
 	
 	// Update is called once per frame
@@ -44,5 +51,6 @@ public class GameManager : MonoSingleton<GameManager> {
 		{
 			player[i].Update();
 		}
+		pressureField.Update();
 	}
 }

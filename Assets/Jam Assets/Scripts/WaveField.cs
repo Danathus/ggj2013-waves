@@ -19,6 +19,8 @@ public class PressureField
     
     int mx = 0, my = 0;
     bool mouseMove = false;
+	
+	public Texture2D texture;
 
     //window.addEventListener('load', init, false);
     
@@ -42,6 +44,9 @@ public class PressureField
         
         tmpState1 = new int[TOTAL_PIXELS];
         tmpState2 = new int[TOTAL_PIXELS];
+		data = new int[TOTAL_PIXELS*4];
+		
+		// create texture resolution at screen.width x screen.height
 
 		/*
         document.onmousemove = onMouseMove;
@@ -51,8 +56,13 @@ public class PressureField
 		// djmc: uncomment when we're ready...
 		/*
         seedWorld();
-        runLoop();
+        Update();
         //*/
+		
+		// duplicate the original texture and assign to the material
+		Texture2D temp = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false);
+		texture = (Texture2D)Texture2D.Instantiate(temp);//renderer.material.mainTexture);
+	    //renderer.material.mainTexture = texture;
     }
     
     int getAlpha(int x, int y)
@@ -80,7 +90,6 @@ public class PressureField
         {
             dest[i] = (((source[i-1] + source[i+1] + source[i-WIDTH] + source[i+WIDTH])  >> 1) ) - dest[i];
             dest[i] -= (dest[i] >> 7);
-            
         }
     }
 
@@ -114,19 +123,19 @@ public class PressureField
         mouseMove = false;
     }
     
-    void runLoop(){
-       counter += 1;
+    public void Update(){
+        counter += 1;
        
-       handleMouseInput();
+        handleMouseInput();
        
-       if(counter % 2 == 0)
-       {
+        if(counter % 2 == 0)
+        {
             processWater(tmpState1, tmpState2);
-       }
-       else
-       {
+        }
+        else
+        {
             processWater(tmpState2, tmpState1);
-       }
+        }
        
         
         for(var y = 0; y < HEIGHT; y++)
@@ -160,6 +169,27 @@ public class PressureField
         context.fillRect(0, 0, WIDTH * scale,HEIGHT * scale);
         window.setTimeout(runLoop, 14);
         //*/
+	
+	    // colors used to tint the first 3 mip levels
+	    Color[] colors = new Color[3];
+	    colors[0] = Color.red;
+	    colors[1] = Color.green;
+	    colors[2] = Color.blue;
+	    int mipCount = Mathf.Min(3, texture.mipmapCount);
+	
+	    // tint each mip level
+	    for(int mip = 0; mip < mipCount; ++mip)
+		{
+	        Color[] cols = texture.GetPixels(mip);
+	        for(int i = 0; i < cols.Length; ++i)
+			{
+	            cols[i] = Color.Lerp(cols[i], colors[mip], 0.33f);
+	        }
+	        texture.SetPixels(cols, mip);
+	    }
+	
+	    // actually apply all SetPixels, don't recalculate mip levels
+	    texture.Apply(false);
     }
 }
 
