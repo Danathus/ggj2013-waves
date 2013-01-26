@@ -22,7 +22,6 @@ public class GameManager : MonoSingleton<GameManager> {
 		audio.pitch = 1.5f;
 		audio.Play();
 		
-		Camera.main.transform.position += Vector3.back * 10;
 		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
 		matColor = new Material[numPlayers];
 		for(int i = 0; i < numPlayers; ++i){
