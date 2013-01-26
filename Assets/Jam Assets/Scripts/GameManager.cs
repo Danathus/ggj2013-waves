@@ -58,7 +58,8 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		planeMeshRenderer.material.mainTexture = pressureField.texture;
 	}
-	
+
+	float hackWaveTimer = 1.0f;
 	// Update is called once per frame
 	void Update () {
 		for (int i = 0; i < numPlayers; ++i)
@@ -66,5 +67,12 @@ public class GameManager : MonoSingleton<GameManager> {
 			player[i].Update();
 		}
 		pressureField.Update();
+
+		hackWaveTimer -= Time.deltaTime;
+		if (hackWaveTimer < 0.0f)
+		{
+			pressureField.SetPressure(2, 2, 1 << 15); //15);
+			hackWaveTimer += 1.0f;
+		}
 	}
 }
