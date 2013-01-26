@@ -56,29 +56,29 @@ public class TestScript : MonoBehaviour {
 		go.name = "Wave";
 	}
 	
-	// Update is called once per frame
-	void Update () {
-
+	void ControlPlayer(GameObject obj, KeyCode up, KeyCode down, KeyCode left, KeyCode right)
+	{
 		Vector3 direction = Vector3.zero;
-
-		if (Input.GetKey(KeyCode.RightArrow)) {
+		if (Input.GetKey(right)) {
 			direction += Vector3.right;
 		}
-		
-		if (Input.GetKey(KeyCode.LeftArrow)) {
+		if (Input.GetKey(left)) {
 			direction -= Vector3.right;
 		}
-		
-		if (Input.GetKey(KeyCode.UpArrow)) {
+		if (Input.GetKey(up)) {
 			direction += Vector3.up;
 		}
-		
-		if (Input.GetKey(KeyCode.DownArrow)) {
+		if (Input.GetKey(down)) {
 			direction -= Vector3.up;
 		}
-		//Input.GetButtonDown("Fire1")
-		
-
-		player[0].transform.position += direction * Time.deltaTime * unitsPerSecond;
+		obj.transform.position += direction * Time.deltaTime * unitsPerSecond;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		ControlPlayer(player[0], KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow);
+		ControlPlayer(player[1], KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D);
+		ControlPlayer(player[2], KeyCode.T, KeyCode.G, KeyCode.F, KeyCode.H);
+		ControlPlayer(player[3], KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L);
 	}
 }
