@@ -10,6 +10,7 @@ public class TestScript : MonoBehaviour {
 		
 	}
 
+	/*
 	// djmc -- make these public to expose to unity editor
 	private Vector3 point = Vector3.up;
 	private int numberOfPoints = 10;
@@ -17,6 +18,7 @@ public class TestScript : MonoBehaviour {
 	private Mesh mesh;
 	private Vector3[] vertices;
 	private int[] triangles;
+	//*/
 
 	// Use this for initialization
 	void Start () {
@@ -31,7 +33,12 @@ public class TestScript : MonoBehaviour {
 			player[i] = (GameObject)GameObject.Instantiate(spherePrefab);
 			player[i].transform.position += Vector3.right * i;
 		}
+		
+		// procedurally alter a pulse
+		Pulse mypulse = player[0].GetComponentInChildren<Pulse>();
+		mypulse.beatsPerSecond = 2;
 
+		/*
 		// create a star mesh
 		mesh = new Mesh();
 		mesh.name = "Star Mesh";
@@ -54,6 +61,7 @@ public class TestScript : MonoBehaviour {
 		GameObject.Instantiate(go);
 		go.AddComponent(typeof(MeshRenderer));
 		go.name = "Wave";
+		//*/
 	}
 	
 	void ControlPlayer(GameObject obj, KeyCode up, KeyCode down, KeyCode left, KeyCode right)
