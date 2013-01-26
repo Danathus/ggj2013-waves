@@ -1,10 +1,56 @@
 using UnityEngine;
 using System.Collections;
 
+public class SpherePlayer
+{
+	public GameObject gameObj;
+	public KeyCode up, down, left, right;
+	public string leftMoveAxis, rightMoveAxis;
+	public float unitsPerSecond = 10.0f;
+
+	public SpherePlayer()
+	{
+	}
+
+	public void Initialize(KeyCode up, KeyCode left, KeyCode down, KeyCode right, string leftMoveAxis, string rightMoveAxis)
+	{
+		this.up = up;
+		this.left = left;
+		this.down = down;
+		this.right = right;
+		this.leftMoveAxis = leftMoveAxis;
+		this.rightMoveAxis = rightMoveAxis;
+	}
+
+	public void Update()
+	{
+		Vector3 direction = Vector3.zero;
+		if (Input.GetKey(right)) {
+			direction += Vector3.right;
+		}
+		if (Input.GetKey(left)) {
+			direction -= Vector3.right;
+		}
+		if (Input.GetKey(up)) {
+			direction += Vector3.up;
+		}
+		if (Input.GetKey(down)) {
+			direction -= Vector3.up;
+		}
+		
+		//
+		direction += new Vector3(Input.GetAxis(leftMoveAxis),Input.GetAxis(rightMoveAxis),0);
+		
+		gameObj.transform.position += direction * Time.deltaTime * unitsPerSecond;
+	}
+}
+
 public class TestScript : MonoBehaviour {
 	
 	private float unitsPerSecond = 10.0f;
-	GameObject[] player;
+	private int numPlayers = 4;
+	//GameObject[] player;
+	SpherePlayer[] player;
 	
 	void Awake() {
 		
@@ -26,16 +72,21 @@ public class TestScript : MonoBehaviour {
 
 		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
 
-		int numPlayers = 4;
-		player = new GameObject[numPlayers];
+		player = new SpherePlayer[numPlayers];
+		//player = new GameObject[numPlayers];
 		for (int i = 0; i < numPlayers; ++i)
 		{
-			player[i] = (GameObject)GameObject.Instantiate(spherePrefab);
-			player[i].transform.position += Vector3.right * i;
+			player[i] = new SpherePlayer();
+			player[i].gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
+			player[i].gameObj.transform.position += Vector3.right * i;
 		}
+		player[0].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, "L_XAxis_1", "L_YAxis_1");
+		player[1].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, "L_XAxis_2", "L_YAxis_2");
+		player[2].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, "L_XAxis_3", "L_YAxis_3");
+		player[3].Initialize(KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, "L_XAxis_4", "L_YAxis_4");
 		
 		// procedurally alter a pulse
-		Pulse mypulse = player[0].GetComponentInChildren<Pulse>();
+		Pulse mypulse = player[0].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.beatsPerSecond = 2;
 
 		/*
@@ -84,9 +135,16 @@ public class TestScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		ControlPlayer(player[0], KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow);
-		ControlPlayer(player[1], KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D);
-		ControlPlayer(player[2], KeyCode.T, KeyCode.G, KeyCode.F, KeyCode.H);
-		ControlPlayer(player[3], KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L);
+		for (int i = 0; i < numPlayers; ++i)
+		{
+			player[i].Update();
+		}
+		
+		/*
+		ControlPlayer(player[0].gameObj, KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow);
+		ControlPlayer(player[1].gameObj, KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D);
+		ControlPlayer(player[2].gameObj, KeyCode.T, KeyCode.G, KeyCode.F, KeyCode.H);
+		ControlPlayer(player[3].gameObj, KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L);
+		//*/
 	}
 }
