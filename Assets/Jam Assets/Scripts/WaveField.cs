@@ -6,13 +6,13 @@ public class PressureField
 	const int WIDTH = 128;
     const int HEIGHT = 96;
 	const int TOTAL_PIXELS = WIDTH * HEIGHT;
-	const int ROW_STRIDE = WIDTH * 4;
+	const int ROW_STRIDE = WIDTH;// * 4;
 	int scale = 10;
     
     int counter = 0;
     //var linePosition = 0;
     //var imageData;
-    int[] data;
+    Color[] data;
     //var tmpState;
 	int[] tmpState1;
 	int[] tmpState2;
@@ -44,7 +44,7 @@ public class PressureField
         
         tmpState1 = new int[TOTAL_PIXELS];
         tmpState2 = new int[TOTAL_PIXELS];
-		data = new int[TOTAL_PIXELS*4];
+		data = new Color[TOTAL_PIXELS];
 		
 		// create texture resolution at screen.width x screen.height
 
@@ -66,9 +66,10 @@ public class PressureField
 	    //renderer.material.mainTexture = texture;
     }
     
-    int getAlpha(int x, int y)
+    Color getColor(int x, int y)
     {
-        return data[y * ROW_STRIDE + x * 4 + 3];
+        //return data[y * ROW_STRIDE + x * 4 + 3];
+		return data[y*ROW_STRIDE + x];
     }
     
     void seedWorld()
@@ -79,12 +80,12 @@ public class PressureField
             {
                 //tmpState1[y * WIDTH + x]  = 0;
                 //tmpState2[y * WIDTH + x ] = 0;
-				tmpState1[y * WIDTH + x]  = 2048;
-                tmpState2[y * WIDTH + x ] = 2048;
+				tmpState1[y * WIDTH + x]  = 0;
+                tmpState2[y * WIDTH + x ] = 0;
             }
         }
         
-        tmpState2[HEIGHT >> 1 * WIDTH + WIDTH >> 1] = 255;
+        tmpState2[HEIGHT/2 * WIDTH + WIDTH /2] = 1 << 15; //12;
     }
     
     void processWater(int[] source, int[] dest)
@@ -116,18 +117,18 @@ public class PressureField
     void handleMouseInput()
     {
 		// hack
-		mouseMove = true;
-		mx = WIDTH/2;
-		my = HEIGHT/2;
+		//mouseMove = true;
+		//mx = WIDTH/2;
+		//my = HEIGHT/2;
 		// hack
 
         if(!mouseMove)
             return;
         
         if(counter % 2 == 0)
-            tmpState1[my * WIDTH + mx ] = 2048;
+            tmpState1[my * WIDTH + mx ] = 4096;
         else
-            tmpState2[my * WIDTH + mx ] = 2048;
+            tmpState2[my * WIDTH + mx ] = 4096;
             
         mouseMove = false;
     }
@@ -153,21 +154,22 @@ public class PressureField
             { 
                 //set the cell color
                 int val = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x] : tmpState1[y * WIDTH + x]) >> 4;
-				if (x == 0 && y == 0)
-				{
-					Debug.Log(val);
-				}
+
+				//if (x == 0 && y == 0)
+				//{
+				//	Debug.Log(val);
+				//}
                 
                 //clamp the value to the valid ranges.
                 if(val > 255 )
                     val = 255;
                 else if(val < 0)
                     val = 0;
-                
-                data[y * ROW_STRIDE + x * 4] = val;
-                data[y * ROW_STRIDE + x * 4 + 1] = val;
-                data[y * ROW_STRIDE + x * 4 + 2] = val;
-                data[y * ROW_STRIDE + x * 4 + 3] = 255;              
+                float fval = (float)val / 255.0f;
+                data[y * ROW_STRIDE + x].r = fval;
+                data[y * ROW_STRIDE + x].g = fval;
+                data[y * ROW_STRIDE + x].b = fval;
+                data[y * ROW_STRIDE + x].a = 1.0f;//255;              
             }
         }
 
@@ -182,7 +184,8 @@ public class PressureField
         context.fillRect(0, 0, WIDTH * scale,HEIGHT * scale);
         window.setTimeout(runLoop, 14);
         //*/
-	
+
+		/*
 	    // colors used to tint the first 3 mip levels
 	    Color[] colors = new Color[3];
 	    colors[0] = Color.red;
@@ -209,6 +212,8 @@ public class PressureField
 	        }
 	        texture.SetPixels(cols, mip);
 	    }
+	    //*/
+		texture.SetPixels(data, 0);
 	
 	    // actually apply all SetPixels, don't recalculate mip levels
 	    texture.Apply(false);
