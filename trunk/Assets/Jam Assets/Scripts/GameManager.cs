@@ -23,13 +23,16 @@ public class GameManager : MonoSingleton<GameManager> {
 		audio.Play();
 		
 		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
+		//Component p = spherePrefab.GetComponentInChildren(typeof(Pulse));
+		
 		matColor = new Material[numPlayers];
 		for(int i = 0; i < numPlayers; ++i){
 			matColor[i] = (Material)Resources.Load ("mat" + i, typeof(Material));
 		}
 		
-		matColor[0].color = Color.black;
+		matColor[0].color = Color.blue;
 		matColor[1].color = Color.green;
+		//p.renderer.material = matColor[1];
 		matColor[2].color = Color.red;
 		matColor[3].color = Color.yellow;
 		//matColor = (Material)Resources.Load ("mat", typeof(Material));
@@ -42,6 +45,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			player[i].gameObj.renderer.material = matColor[i];
 			player[i].gameObj.transform.position += Vector3.right * i;
 		}
+		
 		player[0].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, "L_XAxis_1", "L_YAxis_1");
 		player[1].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, "L_XAxis_2", "L_YAxis_2");
 		player[2].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, "L_XAxis_3", "L_YAxis_3");
@@ -51,7 +55,17 @@ public class GameManager : MonoSingleton<GameManager> {
 		Pulse mypulse = player[0].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.beatsPerSecond = 2;
 		mypulse.amplitude = 2;
+		mypulse.renderer.material.SetColor ("_PulseColor", Color.blue);
+		
+		mypulse = player[1].gameObj.GetComponentInChildren<Pulse>();
+		mypulse.renderer.material.SetColor ("_PulseColor", Color.green);
 
+				mypulse = player[2].gameObj.GetComponentInChildren<Pulse>();
+		mypulse.renderer.material.SetColor ("_PulseColor", Color.red);
+		
+				mypulse = player[3].gameObj.GetComponentInChildren<Pulse>();
+		mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
+		
 		pressureField = new PressureField();
 		pressureField.init();
 		
