@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TestScript : MonoBehaviour {
 	
-	private float unitsPerSecond = 10.0f;
+	//private float unitsPerSecond = 10.0f;
 	
 	PressureField pressureField;
 	

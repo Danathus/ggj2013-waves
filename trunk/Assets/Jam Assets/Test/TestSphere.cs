@@ -7,13 +7,11 @@ public class TestSphere : MonoBehaviour {
 	
 	System.Action[] updateList;
 	System.Action currentUpdate;
-	
-	Vector3 originalScale;
 
 	// Use this for initialization
 	void Start () {
 	
-		originalScale = transform.localScale;
+		//riginalScale = transform.localScale;
 		currentUpdate = UpdateLinear;
 	}
 	
