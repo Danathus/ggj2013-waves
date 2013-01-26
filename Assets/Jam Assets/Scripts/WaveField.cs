@@ -54,13 +54,14 @@ public class PressureField
         //*/
         
 		// djmc: uncomment when we're ready...
-		/*
         seedWorld();
+		/*
         Update();
         //*/
 		
 		// duplicate the original texture and assign to the material
-		Texture2D temp = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false);
+		//Texture2D temp = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false);
+		Texture2D temp = new Texture2D(WIDTH, HEIGHT, TextureFormat.ARGB32, false);
 		texture = (Texture2D)Texture2D.Instantiate(temp);//renderer.material.mainTexture);
 	    //renderer.material.mainTexture = texture;
     }
@@ -76,8 +77,10 @@ public class PressureField
         {
             for(var x = 0; x < WIDTH; x++)
             {
-                tmpState1[y * WIDTH + x] = 0;
-                tmpState2[y * WIDTH + x ] = 0;
+                //tmpState1[y * WIDTH + x]  = 0;
+                //tmpState2[y * WIDTH + x ] = 0;
+				tmpState1[y * WIDTH + x]  = 2048;
+                tmpState2[y * WIDTH + x ] = 2048;
             }
         }
         
@@ -112,6 +115,12 @@ public class PressureField
     
     void handleMouseInput()
     {
+		// hack
+		mouseMove = true;
+		mx = WIDTH/2;
+		my = HEIGHT/2;
+		// hack
+
         if(!mouseMove)
             return;
         
@@ -123,37 +132,41 @@ public class PressureField
         mouseMove = false;
     }
     
-    public void Update(){
-        counter += 1;
-       
-        handleMouseInput();
-       
-        if(counter % 2 == 0)
-        {
-            processWater(tmpState1, tmpState2);
-        }
-        else
-        {
-            processWater(tmpState2, tmpState1);
-        }
-       
+    public void Update(){		
+		// physical integration step
+		//*
+		counter += 1;
+		handleMouseInput();
+		if(counter % 2 == 0)
+		{
+			processWater(tmpState1, tmpState2);
+		}
+		else
+		{
+			processWater(tmpState2, tmpState1);
+		}
+		//*/
         
         for(var y = 0; y < HEIGHT; y++)
         {
             for(var x = 0; x < WIDTH; x++)
             { 
                 //set the cell color
-                var value = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x] : tmpState1[y * WIDTH + x]) >> 4;
+                int val = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x] : tmpState1[y * WIDTH + x]) >> 4;
+				if (x == 0 && y == 0)
+				{
+					Debug.Log(val);
+				}
                 
                 //clamp the value to the valid ranges.
-                if(value > 255 )
-                    value = 255;
-                else if(value < 0)
-                    value = 0;
+                if(val > 255 )
+                    val = 255;
+                else if(val < 0)
+                    val = 0;
                 
-                data[y * ROW_STRIDE + x * 4] = value;
-                data[y * ROW_STRIDE + x * 4 + 1] = value;
-                data[y * ROW_STRIDE + x * 4 + 2] = value;
+                data[y * ROW_STRIDE + x * 4] = val;
+                data[y * ROW_STRIDE + x * 4 + 1] = val;
+                data[y * ROW_STRIDE + x * 4 + 2] = val;
                 data[y * ROW_STRIDE + x * 4 + 3] = 255;              
             }
         }
@@ -183,7 +196,16 @@ public class PressureField
 	        Color[] cols = texture.GetPixels(mip);
 	        for(int i = 0; i < cols.Length; ++i)
 			{
-	            cols[i] = Color.Lerp(cols[i], colors[mip], 0.33f);
+	            //cols[i] = Color.Lerp(cols[i], colors[mip], 0.33f);
+				//cols[i] = Color.blue;
+				int y = i / ROW_STRIDE;
+				int x = i % ROW_STRIDE;
+				float brightness = (float)data[y * ROW_STRIDE + x * 4] / 255;
+				cols[i] = new Color(brightness, brightness, brightness, 255);
+				if (i == 0)
+				{
+					//Debug.Log(data[y * ROW_STRIDE + x * 4]);
+				}
 	        }
 	        texture.SetPixels(cols, mip);
 	    }
