@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: pulse
-  m_Shader: {fileID: 4800000, guid: bc282738352750d4593220c28d0a231e, type: 3}
+  m_Shader: {fileID: 4800000, guid: 022731c63bb35c34c97eae2d05c14621, type: 3}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -28,12 +28,24 @@ Material:
     m_Floats:
       data:
         first:
+          name: _PulseRadius
+        second: 17.7000008
+      data:
+        first:
+          name: _PulseRadiusSquared
+        second: 3.53999996
+      data:
+        first:
           name: _ElapsedTime
         second: 0
     m_Colors:
       data:
         first:
           name: _Color
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _PulseColor
         second: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1002 &2100001
 EditorExtensionImpl:
