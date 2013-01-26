@@ -34,8 +34,11 @@ public class TestXBoxControl : MonoBehaviour {
 			
 		//	direction += new Vector3(Input.GetAxis("Horizontal"),0,0);
 		}*/
-		player[0].transform.Translate (Input.GetAxis ("Horizontal") *Time.deltaTime * unitsPerSecond,0,0);
-		player[0].transform.Translate(0,Input.GetAxis("Vertical") * Time.deltaTime * unitsPerSecond, 0);
+		player[0].transform.Translate (Input.GetAxis ("L_XAxis_1") *Time.deltaTime * unitsPerSecond,0,0);
+		player[0].transform.Translate(0,Input.GetAxis("L_YAxis_1") * Time.deltaTime * unitsPerSecond, 0);
+		
+		player[1].transform.Translate (Input.GetAxis ("L_XAxis_2") *Time.deltaTime * unitsPerSecond,0,0);
+		player[1].transform.Translate(0,Input.GetAxis("L_YAxis_2") * Time.deltaTime * unitsPerSecond, 0);
 		
 		/*if (Input.GetKey(KeyCode.LeftArrow)) {
 			direction -= Vector3.right;
