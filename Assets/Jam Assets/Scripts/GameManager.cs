@@ -245,7 +245,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		UpdateEnemySpawner();
 		UpdateHeartbeat();
 		
-		Debug.Log(player[0].pulseStrength + ", " + player[1].pulseStrength);
+		//Debug.Log(player[0].pulseStrength + ", " + player[1].pulseStrength);
 	}
 	
 	void UpdateEnemySpawner()
