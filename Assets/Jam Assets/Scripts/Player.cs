@@ -86,7 +86,7 @@ public class Player
 		{
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(gameObj.transform.position);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			waveField.SetPressure(pos2d, 1 << 16); //15);
+			waveField.SetPressure(pos2d, 1 << 16, this.id); //15);
 			heartbeatTimer += 0.5f;
 		}
 	}
