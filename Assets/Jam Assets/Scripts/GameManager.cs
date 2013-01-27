@@ -60,6 +60,11 @@ public class GameManager : MonoSingleton<GameManager> {
 	
 	void UpdateAudio()
 	{
+		if (heart.dead)
+		{
+			audio.Stop();
+			return;
+		}
 		audio.volume = Mathf.Clamp((float)enemies.Count / 5, 0.5f, 1.0f);
 		audio.pitch = Mathf.Clamp((float)enemies.Count/5 + 1.0f, 1.0f, 2.5f);
 		//Debug.Log (audio.volume);
@@ -238,17 +243,23 @@ public class GameManager : MonoSingleton<GameManager> {
 		List<Enemy> killthese = new List<Enemy>();
 		foreach (Enemy enemy in enemies)
 		{
-			enemy.Update();
+			if (!heart.dead)
+			{
+				enemy.Update();
+			}
 
 			// if we get close to the heart...
-			if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 2.0f)
+			if (!heart.dead)
 			{
-				// remove the enemy
-				killthese.Add(enemy);
-				// shake the camera
-				shakeMagnitude = 1.0f;
-				// hurt the heart
-				heart.GetHurt();
+				if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 2.0f)
+				{
+					// remove the enemy
+					killthese.Add(enemy);
+					// shake the camera
+					shakeMagnitude = 1.0f;
+					// hurt the heart
+					heart.GetHurt();
+				}
 			}
 
 			// if we are on a wave that's particularly strong, die
@@ -285,6 +296,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	
 	void UpdateEnemySpawner()
 	{
+		if (heart.dead) { return; }
 		// update enemy spawner
 		enemySpawnTimer -= Time.deltaTime;
 		if (enemySpawnTimer < 0)

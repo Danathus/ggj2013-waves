@@ -35,13 +35,18 @@ public class Heart : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	public bool dead = false;
+	void Update () {		
 		// update minheartscale based on health
 		minHeartScale = 0.1f + 0.9f*(health / maxHealth);
 		maxHeartScale = minHeartScale + 0.2f;
-		Debug.Log (minHeartScale + ", " + maxHeartScale);
+		//Debug.Log (minHeartScale + ", " + maxHeartScale);
 		//
+		
+		if (dead)
+		{
+			minHeartScale = maxHeartScale = 0.0f;
+		}
 		
 		float time = heartPeriod * Mathf.PI * Time.realtimeSinceStartup;
 	
@@ -56,7 +61,12 @@ public class Heart : MonoBehaviour {
 		
 		childLight.transform.position = 
 			Vector3.Lerp(originalLightPos, originalLightPos - Vector3.forward * lightScale, percentScale);
-		
+
+		if (dead)
+		{
+			return;
+		}
+
 		UpdateHeartbeat();
 		UpdateHealth();
 	}
@@ -89,7 +99,17 @@ public class Heart : MonoBehaviour {
 		if (health <= 0)
 		{
 			health = 0;
-			// todo: die
+			Die();
 		}
+	}
+	
+	public void Die()
+	{
+		Vector3 pos3d = Camera.main.WorldToScreenPoint(Vector3.zero);
+		Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+		int heartBeatStrength = 1 << 20; //16;
+		waveField.SetPressure(pos2d, heartBeatStrength, Player.ColorCode.MAGENTA); //15);
+		
+		dead = true;
 	}
 }
