@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameManager : MonoSingleton<GameManager> {
 	
 	MeshRenderer planeMeshRenderer;
+	Heart heart;
 
 	AudioClip heartBeat;
 	
@@ -30,6 +31,8 @@ public class GameManager : MonoSingleton<GameManager> {
 		planeMeshRenderer.material.mainTexture = waveField.texture;
 		
 		enemies = new List<Enemy>();
+		
+		heart = GameObject.FindGameObjectWithTag("HeartTag").GetComponent<Heart>();
 	}
 	
 	// -------------------------------------------------------------------------
