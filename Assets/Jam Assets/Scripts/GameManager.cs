@@ -36,6 +36,8 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		heart = GameObject.FindGameObjectWithTag("HeartTag").GetComponent<Heart>();
 		cameraStartPosition = Camera.main.transform.position;
+		
+		EventMessenger.Instance.AddListener<EventTriggerEnter>(OnEventTriggerEnter);
 	}
 	
 	// -------------------------------------------------------------------------
@@ -236,4 +238,11 @@ public class GameManager : MonoSingleton<GameManager> {
 			heartOffset = Quaternion.Euler(0.0f, 0.0f, 90.0f) * heartOffset;			
 		}
 	}
+	
+	// -------------------------------------------------------------------------
+	void OnEventTriggerEnter(EventTriggerEnter triggerEvent) {
+	
+		
+	}
+	
 }
