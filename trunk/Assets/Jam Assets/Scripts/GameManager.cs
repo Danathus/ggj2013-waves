@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoSingleton<GameManager> {
 	
@@ -8,47 +9,29 @@ public class GameManager : MonoSingleton<GameManager> {
 
 	AudioClip heartBeat;
 	
-	Material[] matColor;
-	
 	private int numPlayers = 4;
 	Player[] player;
 	WaveField waveField;
 	
+	List<Enemy> enemies;
+	
 	// Use this for initialization ---------------------------------------------
-	void Start () {
-		
+	void Start()
+	{
 		heartBeat = (AudioClip)Resources.Load ("GGJ13_Theme", typeof(AudioClip));
 		audio.clip = heartBeat;
 		audio.pitch = 1.5f;
 		audio.Play();
-		
-		GameObject spherePrefab = (GameObject)Resources.Load("Sphere");
-		//Component p = spherePrefab.GetComponentInChildren(typeof(Pulse));
-		
-		matColor = new Material[numPlayers];
-		for(int i = 0; i < numPlayers; ++i){
-			matColor[i] = (Material)Resources.Load ("mat" + i, typeof(Material));
-		}
-		
-		matColor[0].color = Color.blue;
-		matColor[1].color = Color.green;
-		//p.renderer.material = matColor[1];
-		matColor[2].color = Color.red;
-		matColor[3].color = Color.yellow;
-		//matColor = (Material)Resources.Load ("mat", typeof(Material));
-		//matColor.color = Color.blue;
-		
+				
 		waveField = new WaveField();
 		waveField.init();
 
 		player = new Player[numPlayers];
-		for (int i = 0; i < numPlayers; ++i)
+		for (int id = 0; id < numPlayers; ++id)
 		{
-			player[i] = new Player();
-			player[i].gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
-			player[i].gameObj.renderer.material = matColor[i];
-			//player[i].gameObj.transform.position += Vector3.right * i;
-			player[i].waveField = waveField;
+			player[id] = new Player(id);
+			player[id].gameObj.transform.position += Vector3.right * id;
+			player[id].waveField = waveField;
 		}
 		
 		PositionPlayersAroundHeart();
@@ -76,7 +59,11 @@ public class GameManager : MonoSingleton<GameManager> {
 		planeMeshRenderer = (MeshRenderer)((GameObject)GameObject.Instantiate(Resources.Load("waveMesh"))).renderer;
 		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
 		planeMeshRenderer.material.mainTexture = waveField.texture;
+		
+		enemies = new List<Enemy>();
 	}
+
+	float enemySpawnTimer = 5.0f;
 	
 	// ----- TEMP
 	//
@@ -88,7 +75,27 @@ public class GameManager : MonoSingleton<GameManager> {
 		{
 			player[i].Update();
 		}
+		foreach (Enemy enemy in enemies)
+		{
+			enemy.Update();
+		}
 		waveField.Update();
+
+		// update enemy spawner
+		enemySpawnTimer -= Time.deltaTime;
+		if (enemySpawnTimer < 0)
+		{
+			enemySpawnTimer = 5.0f;
+
+			Enemy enemy = new Enemy();
+			//Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, 0));
+			Vector3 pos = new Vector3(-3.0f, -3.0f, 0.0f); //Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+			//pos = new Vector3(pos.x, pos.y, 0);
+			enemy.gameObj.transform.position = pos;
+			enemy.waveField = waveField;
+
+			enemies.Add(enemy);
+		}
 	}
 	
 	// -------------------------------------------------------------------------
