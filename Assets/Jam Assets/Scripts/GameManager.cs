@@ -262,7 +262,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			}
 
 			// if we get close to the heart...
-			if (!heart.dead)
+			if (!heart.dead && !enemy.dead)
 			{
 				if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 2.0f)
 				{
@@ -270,16 +270,21 @@ public class GameManager : MonoSingleton<GameManager> {
 					shakeMagnitude = 1.0f;
 					// hurt the heart
 					heart.GetHurt();
+					// kill the enemy
+					StartCoroutine(KillEnemy(enemy));
 				}
 			}
 
 			// if we are on a wave that's particularly strong, die
-			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
-			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			
-			if(WaveField.WavePixelAmplitude(enemy.gameObj.renderer.material.color, waveField.GetPressure(pos2d)) > Enemy.tooMuchPressure)
+			if (!enemy.dead)
 			{
-				StartCoroutine(KillEnemy(enemy));				
+				Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
+				Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+				
+				if (WaveField.WavePixelAmplitude(enemy.gameObj.renderer.material.color, waveField.GetPressure(pos2d)) > Enemy.tooMuchPressure)
+				{
+					StartCoroutine(KillEnemy(enemy));		
+				}
 			}
 		}
 		
@@ -358,8 +363,9 @@ public class GameManager : MonoSingleton<GameManager> {
 	
 	// -------------------------------------------------------------------------
 	IEnumerator KillEnemy(Enemy enemy) {
+		enemy.dead = true;
 					
-		yield return null;		
+		yield return null;	
 		
 		Transform enemyTransform = enemy.gameObj.transform;
 		Transform heartTransform = heart.transform;
