@@ -97,9 +97,20 @@ public class GameManager : MonoSingleton<GameManager> {
 		foreach (Enemy enemy in enemies)
 		{
 			enemy.Update();
+
+			// if we get close to the heart...
 			if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 1.0f)
 			{
-				// for now, remove the enemy
+				// for now, just remove the enemy
+				killthese.Add(enemy);
+			}
+
+			// if we are on a wave that's particularly strong, die
+			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
+			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+			int tooMuchPressure = 1 << 10;
+			if (waveField.GetPressure(pos2d) > tooMuchPressure)
+			{
 				killthese.Add(enemy);
 			}
 		}

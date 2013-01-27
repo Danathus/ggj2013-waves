@@ -30,8 +30,8 @@ public class WaveField
 	public Texture2D texture;
 	
 	public WaveField() {
-		WIDTH = Screen.width / 4;//128;
-	    HEIGHT = Screen.height / 4;//96;
+		WIDTH = 1024 / 4;//128;
+	    HEIGHT = 768 / 4;//96;
 		TOTAL_PIXELS = WIDTH * HEIGHT;
 		ROW_STRIDE = WIDTH;// * 4;
 		scale = 10;
@@ -104,6 +104,7 @@ public class WaveField
 		Vector2 gridCoordinates = ConvertScreenCoordinatesToGridCoordinates(screenCoordinates);
 		int grid_x = (int)(gridCoordinates.x);
 		int grid_y = (int)(gridCoordinates.y);
+		if (grid_x < 0 || grid_x >= WIDTH || grid_y < 0 || grid_y >= HEIGHT) return 0;
 		int pressure = 0;
 		if(counter % 2 == 0)
             pressure = tmpState1[grid_y * WIDTH + grid_x].red;
