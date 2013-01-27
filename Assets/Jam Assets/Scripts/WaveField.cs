@@ -9,6 +9,10 @@ public class WaveField
 		public int blue;
 		public int yellow;
 	}
+	public static float WavePixelAmplitude(WavePixel pixel)
+	{
+		return pixel.red + pixel.green + pixel.blue + pixel.yellow;
+	}
 	
 	readonly int WIDTH;
     readonly int HEIGHT;
@@ -114,18 +118,21 @@ public class WaveField
 	}
 	
 	// ------------------------------------------------------------------------
-	public int GetPressure(Vector2 screenCoordinates)
+	public WavePixel GetPressure(Vector2 screenCoordinates)
 	{
-		// todo: need to convert between real-space and grid-space
+		WavePixel pressure = new WavePixel();
+		pressure.red = pressure.blue = pressure.green = pressure.yellow = 0;
+
+		// need to convert between real-space and grid-space
 		Vector2 gridCoordinates = ConvertScreenCoordinatesToGridCoordinates(screenCoordinates);
 		int grid_x = (int)(gridCoordinates.x);
 		int grid_y = (int)(gridCoordinates.y);
-		if (grid_x < 0 || grid_x >= WIDTH || grid_y < 0 || grid_y >= HEIGHT) return 0;
-		int pressure = 0;
+		if (grid_x < 0 || grid_x >= WIDTH || grid_y < 0 || grid_y >= HEIGHT) return pressure;
+
 		if(counter % 2 == 0)
-            pressure = tmpState1[grid_y * WIDTH + grid_x].red;
+            pressure = tmpState1[grid_y * WIDTH + grid_x];
         else
-            pressure = tmpState2[grid_y * WIDTH + grid_x].red;
+            pressure = tmpState2[grid_y * WIDTH + grid_x];
 		return pressure;
 	}
     
@@ -151,10 +158,11 @@ public class WaveField
 			// dampen
             //dest[i] -= (dest[i] >> 7);
 			//dest[i] -= (dest[i] >> 4);
-			dest[i].red -= (dest[i].red >> 5);
-			dest[i].green -= (dest[i].green >> 5);
-			dest[i].blue -= (dest[i].blue >> 5);
-			dest[i].yellow -= (dest[i].yellow >> 5);
+			int dampen_exponent = 4; //5;
+			dest[i].red -= (dest[i].red >> dampen_exponent);
+			dest[i].green -= (dest[i].green >> dampen_exponent);
+			dest[i].blue -= (dest[i].blue >> dampen_exponent);
+			dest[i].yellow -= (dest[i].yellow >> dampen_exponent);
         }
     }
 
