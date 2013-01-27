@@ -21,7 +21,7 @@ public class Enemy
 	{
 		gameObj = (GameObject)GameObject.Instantiate(cubePrefab);
 		gameObj.name = "Enemy #" + ++enemyCount;
-		gameObj.renderer.material.color = color;
+		gameObj.renderer.material.color = color * 0.5f;
 	}
 
 	// Use this for initialization
