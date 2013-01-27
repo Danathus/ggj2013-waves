@@ -81,7 +81,9 @@ public class GameManager : MonoSingleton<GameManager> {
 		mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
 	}
 
-	float enemySpawnTimer = 5.0f;
+	float spawnNextEnemyTimeout = 3.0f;
+	float spawnNextEnemyTimeoutDecrease = 0.2f;
+	float enemySpawnTimer = 0.0f;
 	
 	// ----- TEMP
 	//
@@ -92,6 +94,14 @@ public class GameManager : MonoSingleton<GameManager> {
 		for (int i = 0; i < numPlayers; ++i)
 		{
 			player[i].Update();
+			// todo: don't let players leave the space
+			// todo: don't let players overlap the heart
+			if ((player[i].gameObj.transform.position - heart.transform.position).magnitude < 1.5f)
+			{
+				player[i].gameObj.transform.position =
+					(player[i].gameObj.transform.position - heart.transform.position).normalized * 1.5f;
+			}
+			// todo: don't let players overlap each other
 		}
 		List<Enemy> killthese = new List<Enemy>();
 		foreach (Enemy enemy in enemies)
@@ -108,7 +118,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			// if we are on a wave that's particularly strong, die
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			int tooMuchPressure = 1 << 10;
+			int tooMuchPressure = 1 << 11; // 13 is too much
 			if (waveField.GetPressure(pos2d) > tooMuchPressure)
 			{
 				killthese.Add(enemy);
@@ -125,7 +135,9 @@ public class GameManager : MonoSingleton<GameManager> {
 		enemySpawnTimer -= Time.deltaTime;
 		if (enemySpawnTimer < 0)
 		{
-			enemySpawnTimer = 5.0f;
+			enemySpawnTimer = spawnNextEnemyTimeout;
+			spawnNextEnemyTimeout -= spawnNextEnemyTimeoutDecrease;
+			if (spawnNextEnemyTimeout < 0.1f) spawnNextEnemyTimeout = 0.1f;
 
 			Enemy enemy = new Enemy();
 			enemy.waveField = waveField;
