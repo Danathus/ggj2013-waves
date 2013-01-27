@@ -14,7 +14,7 @@ GameObject:
   - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: Heart
-  m_TagString: Untagged
+  m_TagString: HeartTag
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -132,9 +132,9 @@ MonoBehaviour:
   minHeartScale: 1
   heartPeriod: 1
   heartScaleSpeed: 1
+  childLight: {fileID: 0}
   maxLightScale: 2
   minLightScale: 1
-  lightScalePeriod: 1
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

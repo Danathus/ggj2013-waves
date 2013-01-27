@@ -10,13 +10,11 @@ public class Heart : MonoBehaviour {
 	public float heartScaleSpeed = 1.0f;
 	
 	// for scaling the light away and toward the heart
+	public Transform childLight;
 	public float maxLightScale = 2.0f;
 	public float minLightScale = 1.0f;
-	public float lightScalePeriod = 1.0f;
 	
-	Vector3 originalScale;
-	
-	
+	Vector3 originalScale;	
 	
 	Transform thisTransform;
 
@@ -40,5 +38,7 @@ public class Heart : MonoBehaviour {
 		newHeartScale.z = originalScale.z;
 		
 		thisTransform.localScale = newHeartScale;
+		
+		//childLight.transform.position = Vector3.zero;
 	}
 }
