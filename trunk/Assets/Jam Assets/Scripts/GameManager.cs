@@ -324,10 +324,17 @@ public class GameManager : MonoSingleton<GameManager> {
 		enemySpawnTimer -= Time.deltaTime;
 		if (enemySpawnTimer < 0)
 		{
+			float normalizedDifficulty = Mathf.Clamp(gameTime * numPlayers / 120.0f, 0.0f, 1.0f);
+			float minNextTimeout = 0.5f - normalizedDifficulty * 0.4f;
+			float maxNextTimeout = 3.0f - normalizedDifficulty * 2.0f;
+			
+			print("min next: " + minNextTimeout);
+			print("max next: " + maxNextTimeout);
+			
 			enemySpawnTimer = spawnNextEnemyTimeout;
 			spawnNextEnemyTimeout += spawnNextEnemyTimeoutChange;
-			if (spawnNextEnemyTimeout < 0.5f) spawnNextEnemyTimeoutChange = Mathf.Abs(spawnNextEnemyTimeoutChange);
-			if (spawnNextEnemyTimeout > 3.0f) spawnNextEnemyTimeoutChange = -Mathf.Abs(spawnNextEnemyTimeoutChange);
+			if (spawnNextEnemyTimeout < minNextTimeout) spawnNextEnemyTimeoutChange = Mathf.Abs(spawnNextEnemyTimeoutChange);
+			if (spawnNextEnemyTimeout > maxNextTimeout) spawnNextEnemyTimeoutChange = -Mathf.Abs(spawnNextEnemyTimeoutChange);
 			
 			int r_Color = Random.Range (0, l_pColor.Count);
 			Enemy enemy = new Enemy(l_pColor[r_Color]);
