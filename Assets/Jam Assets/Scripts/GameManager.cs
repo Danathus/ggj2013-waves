@@ -14,6 +14,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	WaveField waveField;
 	string formatXAxis;
 	string formatYAxis;
+	Dictionary<int, string> playerToColor;
 	
 	List<Enemy> enemies;
 	Vector3 cameraStartPosition;
@@ -24,6 +25,8 @@ public class GameManager : MonoSingleton<GameManager> {
 	{		
 		StartAudio();		
 				
+		playerToColor = new Dictionary<int, string>();
+		
 		waveField = new WaveField();
 		waveField.init();
 		
@@ -61,20 +64,28 @@ public class GameManager : MonoSingleton<GameManager> {
 	}
 	
 	// -------------------------------------------------------------------------
-	void StartPlayers() {
-		
-		if(PlayerPrefs.GetString("Player0") == "Blue")
+	void StartPlayers()
+	{
+		if(PlayerPrefs.GetString("Player0") == "Blue"){
+			playerToColor[numPlayers] = "Blue";
 			++numPlayers;
-		if(PlayerPrefs.GetString("Player1") == "Green")
+		}
+		if(PlayerPrefs.GetString("Player1") == "Green"){
+			playerToColor[numPlayers] = "Green";
 			++numPlayers;
-		if(PlayerPrefs.GetString("Player2") == "Red")
+		}
+		if(PlayerPrefs.GetString("Player2") == "Red"){
+			playerToColor[numPlayers] = "Red";
 			++numPlayers;
-		if(PlayerPrefs.GetString("Player3") == "Yellow")
+		}
+		if(PlayerPrefs.GetString("Player3") == "Yellow"){
+			playerToColor[numPlayers] = "Yellow";
 			++numPlayers;
+		}
 		player = new Player[numPlayers];
 		for (int id = 0; id < numPlayers; ++id)
 		{
-			player[id] = new Player(id);
+			player[id] = new Player(id, Player.colorCodeFromName(playerToColor[id]));
 			player[id].gameObj.transform.position += Vector3.right * id;
 			player[id].waveField = waveField;
 		}
@@ -83,33 +94,33 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		for(int i = 0; i < numPlayers; ++i){
 			if(i == 0){
-				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = "L_XAxis_"+(i+1);
 				formatXAxis = formatXAxis.Replace("0","");
-				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
 				player[i].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, formatXAxis, formatYAxis);
 			}
 			
 			if(i == 1){
-				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = "L_XAxis_"+(i+1);
 				formatXAxis = formatXAxis.Replace("0","");
-				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
 				player[i].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, formatXAxis, formatYAxis);
 			}
 				
 			if(i == 2){
-				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = "L_XAxis_"+(i+1);
 				formatXAxis = formatXAxis.Replace("0","");
-				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
 				player[i].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, formatXAxis, formatYAxis);
 			}
 				
 			if(i == 3){
-				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = "L_XAxis_"+(i+1);
 				formatXAxis = formatXAxis.Replace("0","");
-				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
 				player[i].Initialize(KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, formatXAxis, formatYAxis);
 			}
@@ -121,25 +132,29 @@ public class GameManager : MonoSingleton<GameManager> {
 		// procedurally alter a pulse
 		Pulse mypulse;
 		for(int i = 0; i < numPlayers; ++i){
-			if(PlayerPrefs.GetString("Player0") == "Blue"){
+			mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
+			mypulse.renderer.material.SetColor ("_PulseColor", Player.toColor(player[i].playerColor));
+			/*
+			if(PlayerPrefs.GetString("Player" + i) == "Blue"){
 				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
 				mypulse.renderer.material.SetColor ("_PulseColor", Color.blue);
 			}
 		
-			if(PlayerPrefs.GetString("Player1") == "Green"){
+			if(PlayerPrefs.GetString("Player" + i) == "Green"){
 				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
 				mypulse.renderer.material.SetColor ("_PulseColor", Color.green);
 			}
 			
-			if(PlayerPrefs.GetString("Player2") == "Red"){
+			if(PlayerPrefs.GetString("Player" + i) == "Red"){
 				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
 				mypulse.renderer.material.SetColor ("_PulseColor", Color.red);
 			}
 			
-			if(PlayerPrefs.GetString("Player3") == "Yellow"){
+			if(PlayerPrefs.GetString("Player" + i) == "Yellow"){
 				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
 				mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
 			}
+			//*/
 		}
 	}
 
