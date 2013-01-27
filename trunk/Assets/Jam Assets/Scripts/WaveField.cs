@@ -55,7 +55,7 @@ public class WaveField
 		
 		// create texture resolution at screen.width x screen.height
         
-        //seedWorld();
+        seedWorld();
 		
 		// duplicate the original texture and assign to the material
 		//Texture2D temp = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false);
@@ -159,13 +159,15 @@ public class WaveField
 	}
     
 	// ------------------------------------------------------------------------
-	/*
+	//*
     void seedWorld()
-    {  
-        tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].red = 1 << 15;
-		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].green = 1 << 15;
-		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].blue = 1 << 15;
-		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].yellow = 1 << 15;//12;
+    {
+		return;
+		int intensity = 1 << 11; // 11 is too much
+        tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].red    = intensity;
+		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].green  = intensity;
+		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].blue   = intensity;
+		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].yellow = intensity;//12;
     }
     //*/
 
@@ -275,6 +277,15 @@ public class WaveField
 			dest[i].green  -= (dest[i].green  >> dampen_exponent);
 			dest[i].blue   -= (dest[i].blue   >> dampen_exponent);
 			dest[i].yellow -= (dest[i].yellow >> dampen_exponent);
+
+			// if the colors are too powerful, clamp them
+			//*
+			int tooPowerful = (1 << 11)/4;
+			dest[i].red    = Mathf.Min(dest[i].red,    tooPowerful);
+			dest[i].green  = Mathf.Min(dest[i].green,  tooPowerful);
+			dest[i].blue   = Mathf.Min(dest[i].blue,   tooPowerful);
+			dest[i].yellow = Mathf.Min(dest[i].yellow, tooPowerful);
+			//*/
         }
     }
 

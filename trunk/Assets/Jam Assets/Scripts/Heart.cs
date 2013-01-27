@@ -74,6 +74,7 @@ public class Heart : MonoBehaviour {
 	float heartbeatTimer = 2.0f;
 	void UpdateHeartbeat()
 	{
+		//return;
 		heartbeatTimer -= Time.deltaTime;
 		//Debug.Log(heartbeatTimer);
 		if (heartbeatTimer < 0)
