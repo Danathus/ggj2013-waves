@@ -82,7 +82,7 @@ public class WaveField
 	}
 	
 	// ------------------------------------------------------------------------
-	public void SetPressure(Vector2 screenCoordinates, int pressure, Color colorCode) // think big, powers of 2
+	public void SetPressure(Vector2 screenCoordinates, int pressure, Player.ColorCode colorCode) // think big, powers of 2
 	{
 		// todo: need to convert between real-space and grid-space
 		//    question: how many units to the edge of the screen? Can we affix that to something specific?
@@ -96,21 +96,22 @@ public class WaveField
 		if (index < tmpState1.Length) {
 			if(counter % 2 == 0) {
 				
-				/*switch (playerID) {
-					case 0: tmpState1[index].red = pressure; break;
-					case 1: tmpState1[index].green = pressure; break;
-					case 2: tmpState1[index].blue = pressure; break;
-					case 3: tmpState1[index].yellow = pressure; break;
+				//*
+				switch (colorCode) {
+					case Player.ColorCode.RED:    tmpState1[index].red = pressure; break;
+					case Player.ColorCode.GREEN:  tmpState1[index].green = pressure; break;
+					case Player.ColorCode.BLUE:   tmpState1[index].blue = pressure; break;
+					case Player.ColorCode.YELLOW: tmpState1[index].yellow = pressure; break;
 					default: break;
-				}*/
+				}//*/
 	            
 			}
 	        else {
-				switch (playerID) {
-					case 0: tmpState2[index].red = pressure; break;
-					case 1: tmpState2[index].green = pressure; break;
-					case 2: tmpState2[index].blue = pressure; break;
-					case 3: tmpState2[index].yellow = pressure; break;
+				switch (colorCode) {
+					case Player.ColorCode.RED:    tmpState2[index].red = pressure; break;
+					case Player.ColorCode.GREEN:  tmpState2[index].green = pressure; break;
+					case Player.ColorCode.BLUE:   tmpState2[index].blue = pressure; break;
+					case Player.ColorCode.YELLOW: tmpState2[index].yellow = pressure; break;
 					default: break;
 				}	            
 			}

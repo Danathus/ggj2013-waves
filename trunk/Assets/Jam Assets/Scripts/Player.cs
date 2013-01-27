@@ -7,7 +7,8 @@ public class Player
 		RED = 0,
 		BLUE = 1,
 		GREEN = 2,
-		YELLOW = 3
+		YELLOW = 3,
+		WTF
 	};
 	
 	static GameObject spherePrefab;// = (GameObject)Resources.Load("Sphere");
@@ -19,20 +20,23 @@ public class Player
 	public float unitsPerSecond = 10.0f;
 	public WaveField waveField;
 	float heartbeatTimer = 0.0f;
-	ColorCode playerColor;
+	public ColorCode playerColor;
+	//Color     playerColor;
 
 	static Player()
 	{
 		spherePrefab = (GameObject)Resources.Load("Sphere");
 	}
 
-	public Player(ColorCode id)
+	public Player(int id, ColorCode colorCode)
 	{
 		this.id = id;
+		playerColor = colorCode;
 		gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
 		gameObj.name = "Player #" + id;
 
 		//gameObj.renderer.material = (Material)Resources.Load("mat" + id, typeof(Material));
+		/*
 		if(PlayerPrefs.GetString("Player0") == "Blue")
 			playerColor = Color.blue * 0.5f;
 		if(PlayerPrefs.GetString("Player1") == "Green")
@@ -41,7 +45,8 @@ public class Player
 			playerColor = Color.red * 0.5f;
 		if(PlayerPrefs.GetString("Player3") == "Yellow")
 			playerColor = Color.yellow * 0.5f;
-		gameObj.renderer.material.color = playerColor;
+		//*/
+		gameObj.renderer.material.color = toColor(playerColor) * 0.5f;
 		/*switch (id)
 		{
 		case 0:
@@ -71,18 +76,29 @@ public class Player
 
 	public static Color toColor(ColorCode cC){
 		switch(cC){
-		case RED: return Color.red; break;
-		case BLUE: return Color.blue; break;
-		case GREEN: return Color.green; break;
-		case YELLOW: return Color.yellow; break;
+		case ColorCode.RED: return Color.red; break;
+		case ColorCode.BLUE: return Color.blue; break;
+		case ColorCode.GREEN: return Color.green; break;
+		case ColorCode.YELLOW: return Color.yellow; break;
+		default: return new Color(255, 0, 255, 255);
 		}
 	}
 	
 	public static ColorCode fromColor(Color c){
-		if(c == Color.red) return RED;
-		else if(c== Color.blue) return BLUE;
-		else if(c == Color.green) return GREEN;
-		else if(c == Color.yellow) return YELLOW;
+		if(c == Color.red) return ColorCode.RED;
+		else if(c== Color.blue) return ColorCode.BLUE;
+		else if(c == Color.green) return ColorCode.GREEN;
+		else if(c == Color.yellow) return ColorCode.YELLOW;
+		return ColorCode.WTF;
+	}
+	
+	public static ColorCode colorCodeFromName(string name)
+	{
+		if (name == "Red") return ColorCode.RED;
+		if (name == "Blue") return ColorCode.BLUE;
+		if (name == "Green") return ColorCode.GREEN;
+		if (name == "Yellow") return ColorCode.YELLOW;
+		return ColorCode.WTF;
 	}
 	
 	public void Update()
@@ -122,5 +138,11 @@ public class Player
 			waveField.SetPressure(pos2d, 1 << 16, this.playerColor); //15);
 			heartbeatTimer += 0.5f;
 		}
+
+		// hacked special controls for now
+		if (Input.GetButton("A_1"))
+		{
+		}
+		// hacked special controls for now
 	}
 }
