@@ -111,13 +111,23 @@ public class GameManager : MonoSingleton<GameManager> {
 		{
 			player[i].Update();
 			// todo: don't let players leave the space
-			// todo: don't let players overlap the heart
+			// don't let players overlap the heart
 			if ((player[i].gameObj.transform.position - heart.transform.position).magnitude < 1.5f)
 			{
 				player[i].gameObj.transform.position =
 					(player[i].gameObj.transform.position - heart.transform.position).normalized * 1.5f;
 			}
-			// todo: don't let players overlap each other
+			// don't let players overlap each other
+			for (int j = 0; j < numPlayers; ++j)
+			{
+				if (i == j) continue;
+				Vector3 displacement = player[i].gameObj.transform.position - player[j].gameObj.transform.position;
+				if (displacement.magnitude < 1.0f)
+				{
+					player[i].gameObj.transform.position += displacement * Time.deltaTime * 10;
+					player[j].gameObj.transform.position -= displacement * Time.deltaTime * 10;
+				}
+			}
 		}
 		List<Enemy> killthese = new List<Enemy>();
 		foreach (Enemy enemy in enemies)
