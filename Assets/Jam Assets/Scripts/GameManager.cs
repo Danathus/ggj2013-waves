@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 public class GameManager : MonoSingleton<GameManager> {
 	
-	public float testValue = 1.0f;
-	private MeshRenderer planeMeshRenderer;
+	MeshRenderer planeMeshRenderer;
 
 	AudioClip heartBeat;
 	
-	private int numPlayers = 4;
+	int numPlayers = 4;
 	Player[] player;
 	WaveField waveField;
 	
@@ -17,15 +16,34 @@ public class GameManager : MonoSingleton<GameManager> {
 	
 	// Use this for initialization ---------------------------------------------
 	void Start()
-	{
+	{		
+		StartAudio();		
+				
+		waveField = new WaveField();
+		waveField.init();
+		
+		StartPlayers();
+		ConfigurePlayerColors();
+		
+		planeMeshRenderer = (MeshRenderer)((GameObject)GameObject.Instantiate(Resources.Load("waveMesh"))).renderer;
+		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
+		planeMeshRenderer.material.mainTexture = waveField.texture;
+		
+		enemies = new List<Enemy>();
+	}
+	
+	// -------------------------------------------------------------------------
+	void StartAudio() {
+		
 		heartBeat = (AudioClip)Resources.Load ("GGJ13_Theme", typeof(AudioClip));
 		audio.clip = heartBeat;
 		audio.pitch = 1.5f;
 		audio.Play();
-				
-		waveField = new WaveField();
-		waveField.init();
-
+	}
+	
+	// -------------------------------------------------------------------------
+	void StartPlayers() {
+		
 		player = new Player[numPlayers];
 		for (int id = 0; id < numPlayers; ++id)
 		{
@@ -40,7 +58,10 @@ public class GameManager : MonoSingleton<GameManager> {
 		player[1].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, "L_XAxis_2", "L_YAxis_2");
 		player[2].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, "L_XAxis_3", "L_YAxis_3");
 		player[3].Initialize(KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, "L_XAxis_4", "L_YAxis_4");
-		
+	}
+	
+	// -------------------------------------------------------------------------
+	void ConfigurePlayerColors() {
 		// procedurally alter a pulse
 		Pulse mypulse = player[0].gameObj.GetComponentInChildren<Pulse>();
 		//mypulse.beatsPerSecond = 2;
@@ -55,12 +76,6 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		mypulse = player[3].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
-		
-		planeMeshRenderer = (MeshRenderer)((GameObject)GameObject.Instantiate(Resources.Load("waveMesh"))).renderer;
-		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
-		planeMeshRenderer.material.mainTexture = waveField.texture;
-		
-		enemies = new List<Enemy>();
 	}
 
 	float enemySpawnTimer = 5.0f;

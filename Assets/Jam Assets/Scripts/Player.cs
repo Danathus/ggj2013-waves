@@ -24,20 +24,20 @@ public class Player
 		gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
 		gameObj.name = "Player #" + id;
 
-		gameObj.renderer.material = (Material)Resources.Load("mat" + id, typeof(Material));
+		//gameObj.renderer.material = (Material)Resources.Load("mat" + id, typeof(Material));
 		switch (id)
 		{
 		case 0:
-			gameObj.renderer.material.color = Color.blue;
+			gameObj.renderer.material.color = Color.blue * 0.5f;
 			break;
 		case 1:
-			gameObj.renderer.material.color = Color.green;
+			gameObj.renderer.material.color = Color.green * 0.5f;
 			break;
 		case 2:
-			gameObj.renderer.material.color = Color.red;
+			gameObj.renderer.material.color = Color.red * 0.5f;
 			break;
 		case 3:
-			gameObj.renderer.material.color = Color.yellow;
+			gameObj.renderer.material.color = Color.yellow * 0.5f;
 			break;
 		}
 	}
