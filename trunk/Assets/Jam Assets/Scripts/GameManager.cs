@@ -40,6 +40,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		enemies = new List<Enemy>();
 		
 		heart = GameObject.FindGameObjectWithTag("HeartTag").GetComponent<Heart>();
+		heart.waveField = waveField;
 		cameraStartPosition = Camera.main.transform.position;
 		
 		EventMessenger.Instance.AddListener<EventTriggerEnter>(OnEventTriggerEnter);
@@ -243,7 +244,6 @@ public class GameManager : MonoSingleton<GameManager> {
 		UpdateCameraShake();
 
 		UpdateEnemySpawner();
-		UpdateHeartbeat();
 		
 		//Debug.Log(player[0].pulseStrength + ", " + player[1].pulseStrength);
 	}
@@ -287,21 +287,6 @@ public class GameManager : MonoSingleton<GameManager> {
 			enemy.Initialize();
 
 			enemies.Add(enemy);
-		}
-	}
-
-	float heartbeatTimer = 2.0f;
-	void UpdateHeartbeat()
-	{
-		heartbeatTimer -= Time.deltaTime;
-		//Debug.Log(heartbeatTimer);
-		if (heartbeatTimer < 0)
-		{
-			heartbeatTimer += 2.0f;
-			Vector3 pos3d = Camera.main.WorldToScreenPoint(Vector3.zero);
-			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			int heartBeatStrength = 1 << 14; //16;
-			waveField.SetPressure(pos2d, heartBeatStrength, Player.ColorCode.MAGENTA); //15);
 		}
 	}
 	
