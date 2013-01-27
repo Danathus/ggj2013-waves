@@ -151,8 +151,8 @@ public class GameManager : MonoSingleton<GameManager> {
 			// if we are on a wave that's particularly strong, die
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			int tooMuchPressure = 1 << 11; // 13 is too much
-			if (waveField.GetPressure(pos2d) > tooMuchPressure)
+			int tooMuchPressure = 1 << 10; // 13 is too much
+			if (WaveField.WavePixelAmplitude(waveField.GetPressure(pos2d)) > tooMuchPressure)
 			{
 				killthese.Add(enemy);
 			}
