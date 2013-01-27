@@ -49,29 +49,43 @@ public class PressureField
 		return data[y*ROW_STRIDE + x];
     }
     //*/
-	
-	public void SetPressure(float x, float y, int pressure) // think big, powers of 2
+
+	Vector2 ConvertScreenCoordinatesToGridCoordinates(Vector2 screenCoordinates)
 	{
-		// todo: need to convert between real-space and grid-space
-		//x / (Screen.width/2)
-		int grid_x = (int)x;
-		int grid_y = (int)y;
-		if(counter % 2 == 0)
-            tmpState1[grid_y * WIDTH + grid_x ] = pressure;
-        else
-            tmpState2[grid_y * WIDTH + grid_x ] = pressure;
+		Vector2 normalizedScreenCoordinates = new Vector2(
+			(screenCoordinates.x - Screen.width/2) / (Screen.width/2),
+			(screenCoordinates.y - Screen.height/2) / (Screen.height/2));
+		Vector2 gridCoordinates = new Vector2(
+			normalizedScreenCoordinates.x * WIDTH/2 + WIDTH/2,
+			normalizedScreenCoordinates.y * HEIGHT/2 + HEIGHT/2);
+		return gridCoordinates;
 	}
 	
-	public int GetPressure(float x, float y)
+	public void SetPressure(Vector2 screenCoordinates, int pressure) // think big, powers of 2
 	{
 		// todo: need to convert between real-space and grid-space
-		//x / (Screen.width/2)
-		int grid_x = (int)x;
-		int grid_y = (int)y;
+		//    question: how many units to the edge of the screen? Can we affix that to something specific?
+		Vector2 gridCoordinates = ConvertScreenCoordinatesToGridCoordinates(screenCoordinates);
+		int grid_x = (int)(gridCoordinates.x);
+		int grid_y = (int)(gridCoordinates.y);
 		if(counter % 2 == 0)
-            return tmpState1[grid_y * WIDTH + grid_x ];
+            tmpState1[grid_y * WIDTH + grid_x] = pressure;
         else
-            return tmpState2[grid_y * WIDTH + grid_x ];
+            tmpState2[grid_y * WIDTH + grid_x] = pressure;
+	}
+	
+	public int GetPressure(Vector2 screenCoordinates)
+	{
+		// todo: need to convert between real-space and grid-space
+		Vector2 gridCoordinates = ConvertScreenCoordinatesToGridCoordinates(screenCoordinates);
+		int grid_x = (int)(gridCoordinates.x);
+		int grid_y = (int)(gridCoordinates.y);
+		int pressure = 0;
+		if(counter % 2 == 0)
+            pressure = tmpState1[grid_y * WIDTH + grid_x ];
+        else
+            pressure = tmpState2[grid_y * WIDTH + grid_x ];
+		return pressure;
 	}
     
     void seedWorld()
@@ -94,8 +108,11 @@ public class PressureField
     {
         for (var i = WIDTH; i < TOTAL_PIXELS - WIDTH; i++)
         {
+			// blend in from adjacent cells
             dest[i] = (((source[i-1] + source[i+1] + source[i-WIDTH] + source[i+WIDTH])  >> 1) ) - dest[i];
-            dest[i] -= (dest[i] >> 7);
+			// dampen
+            //dest[i] -= (dest[i] >> 7);
+			dest[i] -= (dest[i] >> 4);
         }
     }
 
