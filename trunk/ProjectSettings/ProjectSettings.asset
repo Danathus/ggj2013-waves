@@ -16,8 +16,8 @@ PlayerSettings:
   cursorHotspot: {x: 0, y: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
-  defaultScreenWidthWeb: 960
-  defaultScreenHeightWeb: 600
+  defaultScreenWidthWeb: 1024
+  defaultScreenHeightWeb: 768
   m_RenderingPath: 1
   m_ActiveColorSpace: 0
   m_MTRendering: 1
@@ -33,7 +33,7 @@ PlayerSettings:
   use32BitDisplayBuffer: 1
   use24BitDepthBuffer: 0
   defaultIsFullScreen: 0
-  runInBackground: 0
+  runInBackground: 1
   captureSingleScreen: 0
   Override IPod Music: 0
   usePlayerLog: 1
@@ -77,7 +77,7 @@ PlayerSettings:
   ForceSDCardPermission: 0
   CreateWallpaper: 0
   APKExpansionFiles: 0
-  StripUnusedMeshComponents: 0
+  StripUnusedMeshComponents: 1
   iPhoneSdkVersion: 988
   iPhoneTargetOSVersion: 10
   uIPrerenderedIcon: 0
@@ -97,7 +97,11 @@ PlayerSettings:
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
   resolutionDialogBanner: {fileID: 0}
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - m_Icon: {fileID: 0}
+      m_Size: 128
   m_BuildTargetBatching: []
   webPlayerTemplate: APPLICATION:Default
   m_TemplateCustomTags: {}
@@ -134,7 +138,16 @@ PlayerSettings:
   ps3SaveGameSlots: 1
   ps3TrialMode: 0
   flashStrippingLevel: 2
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    data:
+      first: 1
+      second: 
+    data:
+      first: 7
+      second: 
+    data:
+      first: 12
+      second: 
   metroPackageName: 
   metroPackageLogo: 
   metroPackageVersion: 
