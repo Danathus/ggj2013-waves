@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Player
 {
+	static GameObject spherePrefab;// = (GameObject)Resources.Load("Sphere");
+
+	public int id;
 	public GameObject gameObj;
 	public KeyCode up, down, left, right;
 	public string leftMoveAxis, rightMoveAxis;
@@ -10,8 +13,33 @@ public class Player
 	public WaveField waveField;
 	float heartbeatTimer = 0.0f;
 
-	public Player()
+	static Player()
 	{
+		spherePrefab = (GameObject)Resources.Load("Sphere");
+	}
+
+	public Player(int id)
+	{
+		this.id = id;
+		gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
+		gameObj.name = "Player #" + id;
+
+		gameObj.renderer.material = (Material)Resources.Load("mat" + id, typeof(Material));
+		switch (id)
+		{
+		case 0:
+			gameObj.renderer.material.color = Color.blue;
+			break;
+		case 1:
+			gameObj.renderer.material.color = Color.green;
+			break;
+		case 2:
+			gameObj.renderer.material.color = Color.red;
+			break;
+		case 3:
+			gameObj.renderer.material.color = Color.yellow;
+			break;
+		}
 	}
 
 	public void Initialize(KeyCode up, KeyCode left, KeyCode down, KeyCode right, string leftMoveAxis, string rightMoveAxis)
