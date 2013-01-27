@@ -11,7 +11,7 @@ public class Enemy
 	static Enemy()
 	{
 		// todo: make this a cube
-		cubePrefab = (GameObject)Resources.Load("Sphere");
+		cubePrefab = (GameObject)Resources.Load("Cube");
 	}
 	
 	public Enemy()
