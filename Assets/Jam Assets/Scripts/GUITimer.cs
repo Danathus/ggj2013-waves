@@ -13,6 +13,7 @@ public class GUITimer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		guiText.text = ((int)Time.timeSinceLevelLoad).ToString();;
+		int time = (int)GameManager.instance.gameTime; // (int)Time.timeSinceLevelLoad
+		guiText.text = time.ToString();
 	}
 }

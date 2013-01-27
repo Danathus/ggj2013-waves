@@ -22,10 +22,12 @@ public class GameManager : MonoSingleton<GameManager> {
 	float shakeMagnitude = 0.0f;
 	
 	float restartTimeout;
+	public float gameTime;
 	
 	// Use this for initialization ---------------------------------------------
 	void Start()
 	{
+		gameTime = 0.0f;
 		restartTimeout = 5.0f;
 		StartAudio();		
 				
@@ -216,6 +218,10 @@ public class GameManager : MonoSingleton<GameManager> {
 	// Update is called once per frame -----------------------------------------
 	void Update ()
 	{
+		if (!heart.dead)
+		{
+			gameTime += Time.deltaTime;
+		}
 		for (int i = 0; i < numPlayers; ++i)
 		{
 			if (!heart.dead)
