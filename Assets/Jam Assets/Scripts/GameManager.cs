@@ -271,7 +271,7 @@ public class GameManager : MonoSingleton<GameManager> {
 					// hurt the heart
 					heart.GetHurt();
 					// kill the enemy
-					StartCoroutine(KillEnemy(enemy));
+					StartCoroutine(KillEnemy(enemy, true));
 				}
 			}
 
@@ -362,7 +362,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	}
 	
 	// -------------------------------------------------------------------------
-	IEnumerator KillEnemy(Enemy enemy) {
+	IEnumerator KillEnemy(Enemy enemy, bool killImmediately = false) {
 		enemy.dead = true;
 					
 		yield return null;	
@@ -371,19 +371,22 @@ public class GameManager : MonoSingleton<GameManager> {
 		Transform heartTransform = heart.transform;
 		
 		enemies.Remove(enemy);
-		
-		Vector3 repelDirection = enemyTransform.position - heartTransform.position;
-		float distanceSquared = repelDirection.sqrMagnitude;
-		repelDirection.Normalize();
-		
-		while (distanceSquared < 1000.0f) {
+
+		if (!killImmediately)
+		{
+			Vector3 repelDirection = enemyTransform.position - heartTransform.position;
+			float distanceSquared = repelDirection.sqrMagnitude;
+			repelDirection.Normalize();
 			
-			enemyTransform.position += repelDirection * Time.deltaTime * 10.0f;
-			enemyTransform.Rotate(-Vector3.left * Time.realtimeSinceStartup * 0.5f, Space.Self);
-			
-			distanceSquared = (enemyTransform.position - heartTransform.position).sqrMagnitude;
-			yield return null;
-		}		 
+			while (distanceSquared < 1000.0f) {
+				
+				enemyTransform.position += repelDirection * Time.deltaTime * 10.0f;
+				enemyTransform.Rotate(-Vector3.left * Time.realtimeSinceStartup * 0.5f, Space.Self);
+				
+				distanceSquared = (enemyTransform.position - heartTransform.position).sqrMagnitude;
+				yield return null;
+			}
+		}
 		
 		
 		Destroy(enemy.gameObj);		
