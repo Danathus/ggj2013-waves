@@ -15,7 +15,8 @@ public class Enemy
 	}
 
 	Vector3 desiredPos;
-	Vector3 currAngle, desiredAngle;
+	float currAngle, desiredAngle;
+	Vector3 forward, right;
 	public Enemy()
 	{
 		gameObj = (GameObject)GameObject.Instantiate(cubePrefab);
@@ -26,7 +27,11 @@ public class Enemy
 	public void Initialize()
 	{
 		desiredPos = gameObj.transform.position;
-		desiredAngle = currAngle = gameObj.transform.eulerAngles;
+		desiredAngle = currAngle = 0.0f;
+
+		// figure out which way is forward
+		forward = gameObj.transform.forward;
+		right = gameObj.transform.right;
 	}
 
 	float marchTimeout = 1.0f;
@@ -37,8 +42,8 @@ public class Enemy
 		if (marchTimeout < 0)
 		{
 			marchTimeout += 1.0f;
-			desiredPos += new Vector3(1.0f, 0.0f, 0.0f);
-			desiredAngle += new Vector3(0.0f, -90.0f, 0.0f);
+			desiredPos += forward;
+			desiredAngle += 90.0f;
 		}
 		
 		// ease-in
@@ -49,10 +54,11 @@ public class Enemy
 		//float weight = 0.9f;
 		float weight = Mathf.Pow(1-k, dt);
 		gameObj.transform.position = weight*gameObj.transform.position + (1-weight)*desiredPos;
-		Vector3 prevAngle = currAngle;
+		float prevAngle = currAngle;
 		currAngle = weight*currAngle + (1-weight)*desiredAngle;
 		//
-		gameObj.transform.Rotate(Vector3.up * (currAngle.y - prevAngle.y), Space.World);
+		gameObj.transform.Rotate(Vector3.left * (currAngle - prevAngle),Space.Self);
+		//gameObj.transform.Rotate(Vector3.up * (currAngle - prevAngle),Space.Self);
 
 		//
 		//gameObj.transform.position += Vector3.right * Time.deltaTime * 1.0f;

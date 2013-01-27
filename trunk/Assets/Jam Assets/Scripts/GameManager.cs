@@ -93,6 +93,13 @@ public class GameManager : MonoSingleton<GameManager> {
 			//pos = new Vector3(pos.x, pos.y, 0);
 			enemy.gameObj.transform.position = pos;
 			enemy.waveField = waveField;
+			// first orient them towards right correctly
+			enemy.gameObj.transform.Rotate(Vector3.up * 90, Space.World);
+			enemy.gameObj.transform.Rotate(Vector3.right * 90, Space.World);
+			// then give them a random 2d direction
+			enemy.gameObj.transform.Rotate(Vector3.back * Random.Range(0, 360.0f), Space.World);
+			//enemy.gameObj.transform.Rotate(Vector3.back * Random.Range(0, 360.0f), Space.World);
+			//enemy.gameObj.transform.Rotate(Vector3.up * Random.Range(0, 360.0f), Space.World); // left isn't correct
 			enemy.Initialize();
 
 			enemies.Add(enemy);
