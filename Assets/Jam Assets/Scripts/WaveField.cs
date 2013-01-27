@@ -10,8 +10,8 @@ public class WaveField
 		public int yellow;
 	}
 	
-	const int WIDTH = 1024/4;//128;
-    const int HEIGHT = 768/4;//96;
+	const int WIDTH = Screen.width / 4;//128;
+    const int HEIGHT = Screen.height /4;//96;
 	const int TOTAL_PIXELS = WIDTH * HEIGHT;
 	const int ROW_STRIDE = WIDTH;// * 4;
 	int scale = 10;
