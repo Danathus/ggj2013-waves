@@ -78,7 +78,7 @@ public class WaveField
 	}
 	
 	// ------------------------------------------------------------------------
-	public void SetPressure(Vector2 screenCoordinates, int pressure) // think big, powers of 2
+	public void SetPressure(Vector2 screenCoordinates, int pressure, int playerID) // think big, powers of 2
 	{
 		// todo: need to convert between real-space and grid-space
 		//    question: how many units to the edge of the screen? Can we affix that to something specific?
@@ -90,10 +90,25 @@ public class WaveField
 		
 		// If we're in bounds apply the pressure
 		if (index < tmpState1.Length) {
-			if(counter % 2 == 0)
-	            tmpState1[index].red = pressure;
-	        else
-	            tmpState2[index].red = pressure;
+			if(counter % 2 == 0) {
+				switch (playerID) {
+					case 0: tmpState1[index].red = pressure; break;
+					case 1: tmpState1[index].green = pressure; break;
+					case 2: tmpState1[index].blue = pressure; break;
+					case 3: tmpState1[index].yellow = pressure; break;
+					default: break;
+				}
+	            
+			}
+	        else {
+				switch (playerID) {
+					case 0: tmpState2[index].red = pressure; break;
+					case 1: tmpState2[index].green = pressure; break;
+					case 2: tmpState2[index].blue = pressure; break;
+					case 3: tmpState2[index].yellow = pressure; break;
+					default: break;
+				}	            
+			}
 		}
 		
 	}
@@ -116,17 +131,11 @@ public class WaveField
     
 	// ------------------------------------------------------------------------
     void seedWorld()
-    {
-        for(var y = 0; y < HEIGHT; y++)
-        {
-            for(var x = 0; x < WIDTH; x++)
-            {
-				tmpState1[y * WIDTH + x].red  = 0;
-                tmpState2[y * WIDTH + x ].red = 0;
-            }
-        }
-        
-        tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].red = 1 << 15; //12;
+    {        
+        tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].red = 1 << 15;
+		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].green = 1 << 15;
+		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].blue = 1 << 15;
+		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].yellow = 1 << 15;//12;
     }
     
 	// ------------------------------------------------------------------------
@@ -136,10 +145,16 @@ public class WaveField
         {
 			// blend in from adjacent cells
             dest[i].red = (((source[i-1].red + source[i+1].red + source[i-WIDTH].red + source[i+WIDTH].red) >> 1)) - dest[i].red;
+			dest[i].green = (((source[i-1].green + source[i+1].green + source[i-WIDTH].green + source[i+WIDTH].green) >> 1)) - dest[i].green;
+			dest[i].blue = (((source[i-1].blue + source[i+1].blue + source[i-WIDTH].blue + source[i+WIDTH].blue) >> 1)) - dest[i].blue;
+			dest[i].yellow = (((source[i-1].yellow + source[i+1].yellow + source[i-WIDTH].yellow + source[i+WIDTH].yellow) >> 1)) - dest[i].yellow;
 			// dampen
             //dest[i] -= (dest[i] >> 7);
 			//dest[i] -= (dest[i] >> 4);
 			dest[i].red -= (dest[i].red >> 5);
+			dest[i].green -= (dest[i].green >> 5);
+			dest[i].blue -= (dest[i].blue >> 5);
+			dest[i].yellow -= (dest[i].yellow >> 5);
         }
     }
 
@@ -161,31 +176,11 @@ public class WaveField
     //*/
     
 	// ------------------------------------------------------------------------
-    void handleMouseInput()
-    {
-		// hack
-		//mouseMove = true;
-		//mx = WIDTH/2;
-		//my = HEIGHT/2;
-		// hack
-
-        if(!mouseMove)
-            return;
-        
-        if(counter % 2 == 0)
-            tmpState1[my * WIDTH + mx].red = 4096;
-        else
-            tmpState2[my * WIDTH + mx].red = 4096;
-            
-        mouseMove = false;
-    }
-    
-	// ------------------------------------------------------------------------
     public void Update(){		
 		// physical integration step
 		//*
 		counter += 1;
-		handleMouseInput();
+
 		if(counter % 2 == 0)
 		{
 			processWater(tmpState1, tmpState2);
