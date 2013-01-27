@@ -1,7 +1,5 @@
 Shader "Custom/pulse" {
-	Properties {
-		_MainTex ("Base (RGB)", 2D) = "white" {}		
-		_PulseRadius ("_PulseRadius", Float) = 0.0
+	Properties {	
 		_PulseRadiusSquared ("_PulseRadiusSquared", Float) = 0.0	
 		_PulseColor ("_PulseColor", color) = (1.0, 1.0, 1.0, 1.0)
 	}
@@ -22,7 +20,6 @@ Shader "Custom/pulse" {
 	};
 	
 	float _ElapsedTime;
-	float _PulseRadius;	
 	float _PulseRadiusSquared;		
 	
 	v2f vert (appdata v) {

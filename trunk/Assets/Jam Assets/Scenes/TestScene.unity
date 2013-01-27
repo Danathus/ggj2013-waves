@@ -344,6 +344,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: a39d0960ce6b07149bf33aafa0031248, type: 2}
+      propertyPath: m_TagString
+      value: HeartTag
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a39d0960ce6b07149bf33aafa0031248, type: 2}
   m_RootGameObject: {fileID: 1413591179}
@@ -484,7 +488,7 @@ GameObject:
   - 114: {fileID: 1413591184}
   m_Layer: 0
   m_Name: Heart
-  m_TagString: Untagged
+  m_TagString: HeartTag
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
