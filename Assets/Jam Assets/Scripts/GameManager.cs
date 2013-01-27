@@ -60,10 +60,10 @@ public class GameManager : MonoSingleton<GameManager> {
 		mypulse = player[1].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.renderer.material.SetColor ("_PulseColor", Color.green);
 
-				mypulse = player[2].gameObj.GetComponentInChildren<Pulse>();
+		mypulse = player[2].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.renderer.material.SetColor ("_PulseColor", Color.red);
 		
-				mypulse = player[3].gameObj.GetComponentInChildren<Pulse>();
+		mypulse = player[3].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
 		
 		pressureField = new PressureField();
@@ -86,8 +86,10 @@ public class GameManager : MonoSingleton<GameManager> {
 		hackWaveTimer -= Time.deltaTime;
 		if (hackWaveTimer < 0.0f)
 		{
-			pressureField.SetPressure(2, 2, 1 << 15); //15);
-			hackWaveTimer += 1.0f;
+			Vector3 pos3d = Camera.main.WorldToScreenPoint(player[0].gameObj.transform.position);
+			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+			pressureField.SetPressure(pos2d, 1 << 15); //15);
+			hackWaveTimer += 0.5f;
 		}
 	}
 }
