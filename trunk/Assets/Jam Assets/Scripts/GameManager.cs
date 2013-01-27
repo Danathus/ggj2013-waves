@@ -201,7 +201,8 @@ public class GameManager : MonoSingleton<GameManager> {
 	
 	// ----- TEMP
 	//
-
+	
+	// -------------------------------------------------------------------------
 	void UpdateCameraShake()
 	{
 		float camShakeRandomAngle = Random.Range(0.0f, 360.0f);
@@ -252,7 +253,7 @@ public class GameManager : MonoSingleton<GameManager> {
 				}
 			}
 		}
-		List<Enemy> killthese = new List<Enemy>();
+		
 		foreach (Enemy enemy in enemies)
 		{
 			if (!heart.dead)
@@ -265,8 +266,6 @@ public class GameManager : MonoSingleton<GameManager> {
 			{
 				if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 2.0f)
 				{
-					// remove the enemy
-					killthese.Add(enemy);
 					// shake the camera
 					shakeMagnitude = 1.0f;
 					// hurt the heart
@@ -282,19 +281,10 @@ public class GameManager : MonoSingleton<GameManager> {
 			
 			if(WaveField.WavePixelAmplitude(enemy.gameObj.renderer.material.color, waveField.GetPressure(pos2d)) > tooMuchPressure)
 			{
-				killthese.Add (enemy);
+				StartCoroutine(KillEnemy(enemy));				
 			}
-			
-			/*if (WaveField.WavePixelAmplitude(waveField.GetPressure(pos2d)) > tooMuchPressure)
-			{
-				killthese.Add(enemy);
-			}*/
 		}
-		foreach (Enemy killme in killthese)
-		{
-			enemies.Remove(killme);
-			GameObject.Destroy(killme.gameObj);
-		}
+		
 		waveField.Update();
 		UpdateAudio();
 
@@ -323,6 +313,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		}
 	}
 	
+	// -------------------------------------------------------------------------
 	void UpdateEnemySpawner()
 	{
 		if (heart.dead) { return; }
@@ -365,6 +356,32 @@ public class GameManager : MonoSingleton<GameManager> {
 
 			enemies.Add(enemy);
 		}
+	}
+	
+	// -------------------------------------------------------------------------
+	IEnumerator KillEnemy(Enemy enemy) {
+					
+		yield return null;		
+		
+		Transform enemyTransform = enemy.gameObj.transform;
+		Transform heartTransform = heart.transform;
+		
+		enemies.Remove(enemy);
+		
+		Vector3 repelDirection = enemyTransform.position - heartTransform.position;
+		float distanceSquared = repelDirection.sqrMagnitude;
+		repelDirection.Normalize();
+		
+		while (distanceSquared < 1000.0f) {
+			
+			enemyTransform.position += repelDirection * Time.deltaTime * 10.0f;
+			
+			distanceSquared = (enemyTransform.position - heartTransform.position).sqrMagnitude;
+			yield return null;
+		}		 
+		
+		
+		Destroy(enemy.gameObj);		
 	}
 	
 	// -------------------------------------------------------------------------
