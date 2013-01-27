@@ -17,7 +17,7 @@ public class Player
 	public int id;
 	public GameObject gameObj;
 	public KeyCode up, down, left, right;
-	public string leftMoveAxis, rightMoveAxis;
+	public string leftMoveAxis, rightMoveAxis, pulseButton;
 	public float unitsPerSecond = 10.0f;
 	public WaveField waveField;
 	float heartbeatTimer = 0.0f;
@@ -65,7 +65,7 @@ public class Player
 		}*/
 	}
 
-	public void Initialize(KeyCode up, KeyCode left, KeyCode down, KeyCode right, string leftMoveAxis, string rightMoveAxis)
+	public void Initialize(KeyCode up, KeyCode left, KeyCode down, KeyCode right, string leftMoveAxis, string rightMoveAxis, string pulseButton)
 	{
 		this.up = up;
 		this.left = left;
@@ -73,6 +73,7 @@ public class Player
 		this.right = right;
 		this.leftMoveAxis = leftMoveAxis;
 		this.rightMoveAxis = rightMoveAxis;
+		this.pulseButton = pulseButton;
 	}
 
 	public static Color toColor(ColorCode cC){
@@ -104,9 +105,22 @@ public class Player
 		if (name == "Magenta") return ColorCode.MAGENTA;
 		return ColorCode.WTF;
 	}
+
+	static float maxPulseStrength = 16;
+	public float pulseStrength = maxPulseStrength;
+	void EmitPulse()
+	{
+		Vector3 pos3d = Camera.main.WorldToScreenPoint(gameObj.transform.position);
+		Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+		waveField.SetPressure(pos2d, 1 << (int)pulseStrength, this.playerColor);
+		pulseStrength -= 1;
+	}
 	
 	public void Update()
 	{
+		pulseStrength += Time.deltaTime;
+		pulseStrength = Mathf.Min(pulseStrength, maxPulseStrength);
+
 		Vector3 direction = Vector3.zero;
 		if (Input.GetKey(right)) {
 			direction += Vector3.right;
@@ -134,18 +148,20 @@ public class Player
 		gameObj.transform.position += direction * Time.deltaTime * unitsPerSecond;
 
 		// update heartbeat
+		/*
 		heartbeatTimer -= Time.deltaTime;
 		if (heartbeatTimer < 0.0f)
 		{
-			Vector3 pos3d = Camera.main.WorldToScreenPoint(gameObj.transform.position);
-			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			waveField.SetPressure(pos2d, 1 << 16, this.playerColor); //15);
+			EmitPulse();
 			heartbeatTimer += 0.5f;
 		}
+		//*/
 
 		// hacked special controls for now
-		if (Input.GetButton("A_1"))
+		//if (Input.GetButton("A_1"))
+		if (Input.GetButtonDown(pulseButton))
 		{
+			EmitPulse();
 		}
 		// hacked special controls for now
 	}

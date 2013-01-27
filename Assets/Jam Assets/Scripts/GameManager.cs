@@ -98,7 +98,7 @@ public class GameManager : MonoSingleton<GameManager> {
 				formatXAxis = formatXAxis.Replace("0","");
 				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
-				player[i].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, formatXAxis, formatYAxis);
+				player[i].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, formatXAxis, formatYAxis, "A_1");
 			}
 			
 			if(i == 1){
@@ -106,7 +106,7 @@ public class GameManager : MonoSingleton<GameManager> {
 				formatXAxis = formatXAxis.Replace("0","");
 				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
-				player[i].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, formatXAxis, formatYAxis);
+				player[i].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, formatXAxis, formatYAxis, "A_2");
 			}
 				
 			if(i == 2){
@@ -114,7 +114,7 @@ public class GameManager : MonoSingleton<GameManager> {
 				formatXAxis = formatXAxis.Replace("0","");
 				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
-				player[i].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, formatXAxis, formatYAxis);
+				player[i].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, formatXAxis, formatYAxis, "A_3");
 			}
 				
 			if(i == 3){
@@ -122,7 +122,7 @@ public class GameManager : MonoSingleton<GameManager> {
 				formatXAxis = formatXAxis.Replace("0","");
 				formatYAxis = "L_YAxis_"+(i+1);
 				formatYAxis = formatYAxis.Replace("0","");
-				player[i].Initialize(KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, formatXAxis, formatYAxis);
+				player[i].Initialize(KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, formatXAxis, formatYAxis, "A_4");
 			}
 		}
 	}
@@ -225,7 +225,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			// if we are on a wave that's particularly strong, die
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			int tooMuchPressure = 1 << 10; // 13 is too much
+			int tooMuchPressure = 1 << 11; // 13 is too much, 10 too low
 			if (WaveField.WavePixelAmplitude(waveField.GetPressure(pos2d)) > tooMuchPressure)
 			{
 				killthese.Add(enemy);
@@ -242,6 +242,14 @@ public class GameManager : MonoSingleton<GameManager> {
 		// update camera shake
 		UpdateCameraShake();
 
+		UpdateEnemySpawner();
+		UpdateHeartbeat();
+		
+		Debug.Log(player[0].pulseStrength + ", " + player[1].pulseStrength);
+	}
+	
+	void UpdateEnemySpawner()
+	{
 		// update enemy spawner
 		enemySpawnTimer -= Time.deltaTime;
 		if (enemySpawnTimer < 0)
@@ -280,15 +288,13 @@ public class GameManager : MonoSingleton<GameManager> {
 
 			enemies.Add(enemy);
 		}
-
-		UpdateHeartbeat();
 	}
 
 	float heartbeatTimer = 2.0f;
 	void UpdateHeartbeat()
 	{
 		heartbeatTimer -= Time.deltaTime;
-		Debug.Log(heartbeatTimer);
+		//Debug.Log(heartbeatTimer);
 		if (heartbeatTimer < 0)
 		{
 			heartbeatTimer += 2.0f;
