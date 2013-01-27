@@ -14,7 +14,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	Player[] player;
 	WaveField waveField;
 	
-	// Use this for initialization
+	// Use this for initialization ---------------------------------------------
 	void Start () {
 		
 		heartBeat = (AudioClip)Resources.Load ("GGJ13_Theme", typeof(AudioClip));
@@ -47,9 +47,11 @@ public class GameManager : MonoSingleton<GameManager> {
 			player[i] = new Player();
 			player[i].gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
 			player[i].gameObj.renderer.material = matColor[i];
-			player[i].gameObj.transform.position += Vector3.right * i;
+			//player[i].gameObj.transform.position += Vector3.right * i;
 			player[i].waveField = waveField;
 		}
+		
+		PositionPlayersAroundHeart();
 		
 		player[0].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, "L_XAxis_1", "L_YAxis_1");
 		player[1].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, "L_XAxis_2", "L_YAxis_2");
@@ -75,8 +77,11 @@ public class GameManager : MonoSingleton<GameManager> {
 		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
 		planeMeshRenderer.material.mainTexture = waveField.texture;
 	}
-
-	// Update is called once per frame
+	
+	// ----- TEMP
+	//
+	
+	// Update is called once per frame -----------------------------------------
 	void Update ()
 	{
 		for (int i = 0; i < numPlayers; ++i)
@@ -84,5 +89,25 @@ public class GameManager : MonoSingleton<GameManager> {
 			player[i].Update();
 		}
 		waveField.Update();
+	}
+	
+	// -------------------------------------------------------------------------
+	void PositionPlayersAroundHeart() {
+		
+		GameObject heart = GameObject.FindGameObjectWithTag("HeartTag");
+		Vector3 heartPosition = heart.transform.position;
+		float heartRadius = (heart.collider as SphereCollider).radius;
+		
+		Vector3 heartOffset = Vector3.up * heartRadius * 2.0f;
+		heartOffset.x *= heart.transform.localScale.x;
+		heartOffset.y *= heart.transform.localScale.y;
+		
+		foreach (Player p in player) {
+			
+			p.gameObj.transform.position = heartPosition + heartOffset;
+			
+			// Rotate the offset for the next player
+			heartOffset = Quaternion.Euler(0.0f, 0.0f, 90.0f) * heartOffset;			
+		}
 	}
 }

@@ -34,6 +34,8 @@ public class Utility  {
 		plane.triangles = tris;	
 		plane.uv = uvs;
 		
+		plane.RecalculateNormals();
+		
 		return plane;
 	}
 	
