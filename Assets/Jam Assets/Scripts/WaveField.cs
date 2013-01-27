@@ -280,7 +280,7 @@ public class WaveField
 
 			// if the colors are too powerful, clamp them
 			//*
-			int tooPowerful = (1 << 11)/4;
+			int tooPowerful = (1 << 15);
 			dest[i].red    = Mathf.Min(dest[i].red,    tooPowerful);
 			dest[i].green  = Mathf.Min(dest[i].green,  tooPowerful);
 			dest[i].blue   = Mathf.Min(dest[i].blue,   tooPowerful);
