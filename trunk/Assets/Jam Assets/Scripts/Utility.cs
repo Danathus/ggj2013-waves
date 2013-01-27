@@ -4,7 +4,9 @@ using System.Collections;
 public class Utility  {
 	
 	// create a quad in world space that fits the whole screen at any distance from the perspective camera
-	static public Mesh CreateFullscreenPlane(float distanceFromCamera) {
+	static public Mesh CreateFullscreenPlane(float distanceFromCamera, 
+											 float additionalHalfWidth = 0.0f, 
+											 float additionalHalfHeight = 0.0f) {
 		
 		Mesh plane = new Mesh();
 		Vector3[] verts = new Vector3[4];
@@ -16,8 +18,8 @@ public class Utility  {
 		
 		Vector3 center = cam.transform.position + cam.transform.forward * distanceFromCamera;
 		
-		float halfHeight = distanceFromCamera * Mathf.Tan(Mathf.Deg2Rad * cam.fov * 0.5f);
-		float halfWidth = halfHeight * cam.aspect;
+		float halfHeight = distanceFromCamera * Mathf.Tan(Mathf.Deg2Rad * cam.fov * 0.5f) + additionalHalfHeight;
+		float halfWidth = halfHeight * cam.aspect + additionalHalfWidth;
 		
 		verts[0] = center - Vector3.right * halfWidth + Vector3.up * halfHeight;
 		verts[1] = center + Vector3.right * halfWidth + Vector3.up * halfHeight;

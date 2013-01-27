@@ -29,7 +29,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		ConfigurePlayerColors();
 		
 		planeMeshRenderer = (MeshRenderer)((GameObject)GameObject.Instantiate(Resources.Load("waveMesh"))).renderer;
-		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
+		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f, 1.0f, 1.0f);
 		planeMeshRenderer.material.mainTexture = waveField.texture;
 		
 		enemies = new List<Enemy>();
