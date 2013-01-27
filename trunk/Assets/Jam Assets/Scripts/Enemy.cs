@@ -8,6 +8,8 @@ public class Enemy
 	public WaveField waveField;
 	static int enemyCount = 0;
 	public static int tooMuchPressure = 1 << 10; //11; // 13 is too much, 10 too low
+	public bool dead = false;
+	
 
 	static Enemy()
 	{
