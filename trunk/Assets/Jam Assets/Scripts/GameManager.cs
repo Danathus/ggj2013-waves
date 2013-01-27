@@ -14,6 +14,8 @@ public class GameManager : MonoSingleton<GameManager> {
 	WaveField waveField;
 	
 	List<Enemy> enemies;
+	Vector3 cameraStartPosition;
+	float shakeMagnitude = 0.0f;
 	
 	// Use this for initialization ---------------------------------------------
 	void Start()
@@ -33,6 +35,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		enemies = new List<Enemy>();
 		
 		heart = GameObject.FindGameObjectWithTag("HeartTag").GetComponent<Heart>();
+		cameraStartPosition = Camera.main.transform.position;
 	}
 	
 	// -------------------------------------------------------------------------
@@ -87,7 +90,20 @@ public class GameManager : MonoSingleton<GameManager> {
 	
 	// ----- TEMP
 	//
-	
+
+	void UpdateCameraShake()
+	{
+		float camShakeRandomAngle = Random.Range(0.0f, 360.0f);
+		Camera.main.transform.position = cameraStartPosition + shakeMagnitude *
+			new Vector3(Mathf.Cos(camShakeRandomAngle), Mathf.Sin(camShakeRandomAngle), 0.0f);
+		//
+		float k = 0.999f;
+		float dt = Time.deltaTime;
+		//float weight = 0.9f;
+		float weight = Mathf.Pow(1-k, dt);
+		shakeMagnitude = weight*shakeMagnitude + (1-weight)*0.0f;
+	}
+
 	// Update is called once per frame -----------------------------------------
 	void Update ()
 	{
@@ -109,10 +125,12 @@ public class GameManager : MonoSingleton<GameManager> {
 			enemy.Update();
 
 			// if we get close to the heart...
-			if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 1.0f)
+			if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 2.0f)
 			{
-				// for now, just remove the enemy
+				// remove the enemy
 				killthese.Add(enemy);
+				// shake the camera
+				shakeMagnitude = 1.0f;
 			}
 
 			// if we are on a wave that's particularly strong, die
@@ -130,6 +148,9 @@ public class GameManager : MonoSingleton<GameManager> {
 			GameObject.Destroy(killme.gameObj);
 		}
 		waveField.Update();
+
+		// update camera shake
+		UpdateCameraShake();
 
 		// update enemy spawner
 		enemySpawnTimer -= Time.deltaTime;
