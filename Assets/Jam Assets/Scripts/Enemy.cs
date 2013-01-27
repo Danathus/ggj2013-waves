@@ -7,6 +7,7 @@ public class Enemy
 	public GameObject gameObj;
 	public WaveField waveField;
 	static int enemyCount = 0;
+	public static int tooMuchPressure = 1 << 11; //11; // 13 is too much, 10 too low
 
 	static Enemy()
 	{

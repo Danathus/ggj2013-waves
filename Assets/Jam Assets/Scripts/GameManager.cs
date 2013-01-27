@@ -277,9 +277,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
 			
-			int tooMuchPressure = 1 << 11; //11; // 13 is too much, 10 too low
-			
-			if(WaveField.WavePixelAmplitude(enemy.gameObj.renderer.material.color, waveField.GetPressure(pos2d)) > tooMuchPressure)
+			if(WaveField.WavePixelAmplitude(enemy.gameObj.renderer.material.color, waveField.GetPressure(pos2d)) > Enemy.tooMuchPressure)
 			{
 				StartCoroutine(KillEnemy(enemy));				
 			}
