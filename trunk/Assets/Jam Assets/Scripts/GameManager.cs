@@ -225,7 +225,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			// if we are on a wave that's particularly strong, die
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			int tooMuchPressure = 1 << 11; // 13 is too much, 10 too low
+			int tooMuchPressure = 1 << 11; //11; // 13 is too much, 10 too low
 			if (WaveField.WavePixelAmplitude(waveField.GetPressure(pos2d)) > tooMuchPressure)
 			{
 				killthese.Add(enemy);
@@ -300,7 +300,8 @@ public class GameManager : MonoSingleton<GameManager> {
 			heartbeatTimer += 2.0f;
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(Vector3.zero);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			waveField.SetPressure(pos2d, 1 << 16, Player.ColorCode.MAGENTA); //15);
+			int heartBeatStrength = 1 << 14; //16;
+			waveField.SetPressure(pos2d, heartBeatStrength, Player.ColorCode.MAGENTA); //15);
 		}
 	}
 	

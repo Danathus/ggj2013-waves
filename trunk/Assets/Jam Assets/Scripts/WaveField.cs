@@ -181,12 +181,74 @@ public class WaveField
 			int red     = dest[i].red;
 			int green   = dest[i].green;
 			int yellow  = dest[i].yellow;
-			int threshold = 1 << 7;
-			if (red > (1 << 7) && blue > (1 << 7))
+			int threshold  = 1 << 7;
+			int threshold2 = 1 << 8;
+			int threshold3 = 1 << 9;
+			if (red > threshold && blue > threshold)
 			{
 				dest[i].red  += blue >> 5; // 5
 				dest[i].blue += red  >> 5;
 			}
+			if (red > threshold && green > threshold)
+			{
+				dest[i].red   += green >> 5; // 5
+				dest[i].green += red   >> 5;
+			}
+			if (red > threshold && yellow > threshold)
+			{
+				dest[i].red    += yellow >> 5; // 5
+				dest[i].yellow += red    >> 5;
+			}
+			if (blue > threshold && green > threshold)
+			{
+				dest[i].green  += blue >> 5; // 5
+				dest[i].blue   += green  >> 5;
+			}
+			if (blue > threshold && yellow > threshold)
+			{
+				dest[i].yellow  += blue >> 5; // 5
+				dest[i].blue    += yellow  >> 5;
+			}
+			if (green > threshold && yellow > threshold)
+			{
+				dest[i].green  += yellow >> 5; // 5
+				dest[i].yellow += green  >> 5;
+			}
+			/*
+			if (red > threshold2 && blue > threshold2 && green > threshold2)
+			{
+				dest[i].red   += (blue >> 6) + (green >> 6); // 5
+				dest[i].blue  += (red  >> 6) + (green >> 6);
+				dest[i].green += (red  >> 6) + (blue  >> 6);
+			}
+			if (red > threshold2 && blue > threshold2 && yellow > threshold2)
+			{
+				dest[i].red    += (blue >> 6) + (yellow >> 6); // 5
+				dest[i].blue   += (red  >> 6) + (yellow >> 6);
+				dest[i].yellow += (red  >> 6) + (blue   >> 6);
+			}
+			if (green > threshold2 && blue > threshold2 && yellow > threshold2)
+			{
+				dest[i].green  += (blue   >> 6) + (yellow >> 6); // 5
+				dest[i].blue   += (green  >> 6) + (yellow >> 6);
+				dest[i].yellow += (green  >> 6) + (blue   >> 6);
+			}
+			if (green > threshold2 && red > threshold2 && yellow > threshold2)
+			{
+				dest[i].green  += (red    >> 6) + (yellow >> 6); // 5
+				dest[i].red    += (green  >> 6) + (yellow >> 6);
+				dest[i].yellow += (green  >> 6) + (blue   >> 6);
+			}
+			//*/
+			/*
+			if (green > threshold3 && red > threshold3 && yellow > threshold3 && blue > threshold3)
+			{
+				dest[i].green  += (red    >> 7) + (yellow >> 7) + (blue >> 7); // 5
+				dest[i].red    += (green  >> 7) + (yellow >> 7) + (blue >> 7);
+				dest[i].yellow += (green  >> 7) + (blue   >> 7) + (red  >> 7);
+				dest[i].blue   += (green  >> 7) + (yellow >> 7) + (red  >> 7);
+			}
+			//*/
 			//
 
 			// dampen
