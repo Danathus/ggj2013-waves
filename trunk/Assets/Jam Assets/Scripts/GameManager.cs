@@ -247,6 +247,8 @@ public class GameManager : MonoSingleton<GameManager> {
 				killthese.Add(enemy);
 				// shake the camera
 				shakeMagnitude = 1.0f;
+				// hurt the heart
+				heart.GetHurt();
 			}
 
 			// if we are on a wave that's particularly strong, die
@@ -272,6 +274,13 @@ public class GameManager : MonoSingleton<GameManager> {
 		UpdateEnemySpawner();
 		
 		//Debug.Log(player[0].pulseStrength + ", " + player[1].pulseStrength);
+
+		// hack controls to speed up time
+		Time.timeScale = 1.0f;
+		if (Input.GetKey(KeyCode.LeftShift))
+		{
+			Time.timeScale = 10.0f;
+		}
 	}
 	
 	void UpdateEnemySpawner()
