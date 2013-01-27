@@ -106,16 +106,28 @@ public class GameManager : MonoSingleton<GameManager> {
 			enemySpawnTimer = 5.0f;
 
 			Enemy enemy = new Enemy();
+			enemy.waveField = waveField;
+
+			// position the enemy
+			Vector3 screenPos = new Vector3(Screen.width, Screen.height/2, Mathf.Abs(Camera.main.transform.position.z - heart.transform.position.z));
+			Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+			float screenRadius = worldPos.x;
+			float randomAngleDeg = Random.Range(0, 360.0f);
+			float randomAngleRad = randomAngleDeg * Mathf.Deg2Rad;
+			Vector3 pos = (new Vector3(Mathf.Cos(randomAngleRad), Mathf.Sin(randomAngleRad), 0)) * screenRadius;
+			Debug.Log("screenPos " + screenPos + "; worldPos " + worldPos);
 			//Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, 0));
-			Vector3 pos = new Vector3(-3.0f, -3.0f, 0.0f); //Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+			//Vector3 pos = new Vector3(-3.0f, -3.0f, 0.0f); //Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
 			//pos = new Vector3(pos.x, pos.y, 0);
 			enemy.gameObj.transform.position = pos;
-			enemy.waveField = waveField;
-			// first orient them towards right correctly
+
+			// orient the enemy
+			//   first orient their local coordinate system so they can march correctly
 			enemy.gameObj.transform.Rotate(Vector3.up * 90, Space.World);
 			enemy.gameObj.transform.Rotate(Vector3.right * 90, Space.World);
-			// then give them a random 2d direction
-			enemy.gameObj.transform.Rotate(Vector3.back * Random.Range(0, 360.0f), Space.World);
+			// then give them an appropriate direction
+			//enemy.gameObj.transform.Rotate(Vector3.back * Random.Range(0, 360.0f), Space.World);
+			enemy.gameObj.transform.Rotate(Vector3.back * (-randomAngleDeg+180), Space.World);
 			//enemy.gameObj.transform.Rotate(Vector3.back * Random.Range(0, 360.0f), Space.World);
 			//enemy.gameObj.transform.Rotate(Vector3.up * Random.Range(0, 360.0f), Space.World); // left isn't correct
 			enemy.Initialize();
