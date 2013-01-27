@@ -10,10 +10,10 @@ public class WaveField
 		public int yellow;
 	}
 	
-	const int WIDTH = Screen.width / 4;//128;
-    const int HEIGHT = Screen.height /4;//96;
-	const int TOTAL_PIXELS = WIDTH * HEIGHT;
-	const int ROW_STRIDE = WIDTH;// * 4;
+	readonly int WIDTH;
+    readonly int HEIGHT;
+	readonly int TOTAL_PIXELS;
+	readonly int ROW_STRIDE;
 	int scale = 10;
     
     int counter = 0;
@@ -28,6 +28,14 @@ public class WaveField
     bool mouseMove = false;
 	
 	public Texture2D texture;
+	
+	public WaveField() {
+		WIDTH = Screen.width / 4;//128;
+	    HEIGHT = Screen.height / 4;//96;
+		TOTAL_PIXELS = WIDTH * HEIGHT;
+		ROW_STRIDE = WIDTH;// * 4;
+		scale = 10;
+	}
 
     //window.addEventListener('load', init, false);
     
