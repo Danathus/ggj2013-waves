@@ -17,6 +17,7 @@ public class Heart : MonoBehaviour {
 	Vector3 originalLightPos;
 	
 	Transform thisTransform;
+	public WaveField waveField;
 
 	// Use this for initialization
 	void Start () {
@@ -42,5 +43,22 @@ public class Heart : MonoBehaviour {
 		
 		childLight.transform.position = 
 			Vector3.Lerp(originalLightPos, originalLightPos - Vector3.forward * lightScale, percentScale);
+		
+		UpdateHeartbeat();
+	}
+	
+	float heartbeatTimer = 2.0f;
+	void UpdateHeartbeat()
+	{
+		heartbeatTimer -= Time.deltaTime;
+		//Debug.Log(heartbeatTimer);
+		if (heartbeatTimer < 0)
+		{
+			heartbeatTimer += 2.0f;
+			Vector3 pos3d = Camera.main.WorldToScreenPoint(Vector3.zero);
+			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+			int heartBeatStrength = 1 << 14; //16;
+			waveField.SetPressure(pos2d, heartBeatStrength, Player.ColorCode.MAGENTA); //15);
+		}
 	}
 }
