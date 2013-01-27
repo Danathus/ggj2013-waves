@@ -373,6 +373,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		while (distanceSquared < 1000.0f) {
 			
 			enemyTransform.position += repelDirection * Time.deltaTime * 10.0f;
+			enemyTransform.Rotate(-Vector3.left * Time.realtimeSinceStartup * 0.5f, Space.Self);
 			
 			distanceSquared = (enemyTransform.position - heartTransform.position).sqrMagnitude;
 			yield return null;
