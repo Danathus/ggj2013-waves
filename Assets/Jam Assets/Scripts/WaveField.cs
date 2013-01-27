@@ -14,6 +14,10 @@ public class WaveField
 		return pixel.red + pixel.green + pixel.blue + pixel.yellow;
 	}
 	
+	public static float WavePixelAmplitude(Color enemyColor, WavePixel pixel){
+		return (pixel.red * enemyColor.r) + (pixel.green * enemyColor.b) + (pixel.blue * enemyColor.b) + (pixel.yellow + (enemyColor.r + enemyColor.g)/2);
+	}
+	
 	readonly int WIDTH;
     readonly int HEIGHT;
 	readonly int TOTAL_PIXELS;

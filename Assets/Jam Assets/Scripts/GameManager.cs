@@ -212,7 +212,7 @@ public class GameManager : MonoSingleton<GameManager> {
 		float weight = Mathf.Pow(1-k, dt);
 		shakeMagnitude = weight*shakeMagnitude + (1-weight)*0.0f;
 	}
-
+	
 	// Update is called once per frame -----------------------------------------
 	void Update ()
 	{
@@ -271,11 +271,18 @@ public class GameManager : MonoSingleton<GameManager> {
 			// if we are on a wave that's particularly strong, die
 			Vector3 pos3d = Camera.main.WorldToScreenPoint(enemy.gameObj.transform.position);
 			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+			
 			int tooMuchPressure = 1 << 11; //11; // 13 is too much, 10 too low
-			if (WaveField.WavePixelAmplitude(waveField.GetPressure(pos2d)) > tooMuchPressure)
+			
+			if(WaveField.WavePixelAmplitude(enemy.gameObj.renderer.material.color, waveField.GetPressure(pos2d)) > tooMuchPressure)
+			{
+				killthese.Add (enemy);
+			}
+			
+			/*if (WaveField.WavePixelAmplitude(waveField.GetPressure(pos2d)) > tooMuchPressure)
 			{
 				killthese.Add(enemy);
-			}
+			}*/
 		}
 		foreach (Enemy killme in killthese)
 		{
