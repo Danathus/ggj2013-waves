@@ -51,8 +51,7 @@ public class WaveField
 		
 		// create texture resolution at screen.width x screen.height
         
-		// djmc: uncomment when we're ready...
-        seedWorld();
+        //seedWorld();
 		
 		// duplicate the original texture and assign to the material
 		//Texture2D temp = new Texture2D(Screen.width, Screen.height, TextureFormat.ARGB32, false);
@@ -102,7 +101,15 @@ public class WaveField
 					case Player.ColorCode.GREEN:  tmpState1[index].green = pressure; break;
 					case Player.ColorCode.BLUE:   tmpState1[index].blue = pressure; break;
 					case Player.ColorCode.YELLOW: tmpState1[index].yellow = pressure; break;
-					default: break;
+				default:
+				//case Player.ColorCode.MAGENTA:
+				//case Player.ColorCode.WTF:
+					tmpState1[index].red = pressure;
+					tmpState1[index].green = 0;
+					tmpState1[index].blue = pressure;
+					tmpState1[index].yellow = 0;
+					break;
+				//	default: break;
 				}//*/
 	            
 			}
@@ -112,7 +119,16 @@ public class WaveField
 					case Player.ColorCode.GREEN:  tmpState2[index].green = pressure; break;
 					case Player.ColorCode.BLUE:   tmpState2[index].blue = pressure; break;
 					case Player.ColorCode.YELLOW: tmpState2[index].yellow = pressure; break;
-					default: break;
+				default:
+					//case Player.ColorCode.MAGENTA:
+				//case Player.ColorCode.WTF:
+					tmpState2[index].red = pressure;
+					tmpState2[index].green = 0;
+					tmpState2[index].blue = pressure;
+					tmpState2[index].yellow = 0;
+					break;
+				//	default: break;
+				//	default: break;
 				}	            
 			}
 		}
@@ -139,13 +155,15 @@ public class WaveField
 	}
     
 	// ------------------------------------------------------------------------
+	/*
     void seedWorld()
-    {        
+    {  
         tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].red = 1 << 15;
 		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].green = 1 << 15;
 		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].blue = 1 << 15;
 		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].yellow = 1 << 15;//12;
     }
+    //*/
     
 	// ------------------------------------------------------------------------
     void processWater(WavePixel[] source, WavePixel[] dest)
