@@ -93,6 +93,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			//pos = new Vector3(pos.x, pos.y, 0);
 			enemy.gameObj.transform.position = pos;
 			enemy.waveField = waveField;
+			enemy.Initialize();
 
 			enemies.Add(enemy);
 		}
