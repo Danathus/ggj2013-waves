@@ -82,7 +82,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	}
 
 	float spawnNextEnemyTimeout = 3.0f;
-	float spawnNextEnemyTimeoutDecrease = 0.2f;
+	float spawnNextEnemyTimeoutChange = -0.4f;
 	float enemySpawnTimer = 0.0f;
 	
 	// ----- TEMP
@@ -136,8 +136,9 @@ public class GameManager : MonoSingleton<GameManager> {
 		if (enemySpawnTimer < 0)
 		{
 			enemySpawnTimer = spawnNextEnemyTimeout;
-			spawnNextEnemyTimeout -= spawnNextEnemyTimeoutDecrease;
-			if (spawnNextEnemyTimeout < 0.1f) spawnNextEnemyTimeout = 0.1f;
+			spawnNextEnemyTimeout += spawnNextEnemyTimeoutChange;
+			if (spawnNextEnemyTimeout < 0.5f) spawnNextEnemyTimeoutChange = Mathf.Abs(spawnNextEnemyTimeoutChange);
+			if (spawnNextEnemyTimeout > 3.0f) spawnNextEnemyTimeoutChange = -Mathf.Abs(spawnNextEnemyTimeoutChange);
 
 			Enemy enemy = new Enemy();
 			enemy.waveField = waveField;
