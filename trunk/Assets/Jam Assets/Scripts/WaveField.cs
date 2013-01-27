@@ -119,8 +119,6 @@ public class WaveField
         {
             for(var x = 0; x < WIDTH; x++)
             {
-                //tmpState1[y * WIDTH + x]  = 0;
-                //tmpState2[y * WIDTH + x ] = 0;
 				tmpState1[y * WIDTH + x].red  = 0;
                 tmpState2[y * WIDTH + x ].red = 0;
             }
