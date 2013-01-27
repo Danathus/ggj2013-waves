@@ -68,10 +68,16 @@ public class WaveField
 		Vector2 gridCoordinates = ConvertScreenCoordinatesToGridCoordinates(screenCoordinates);
 		int grid_x = (int)(gridCoordinates.x);
 		int grid_y = (int)(gridCoordinates.y);
-		if(counter % 2 == 0)
-            tmpState1[grid_y * WIDTH + grid_x] = pressure;
-        else
-            tmpState2[grid_y * WIDTH + grid_x] = pressure;
+		int index = grid_y * WIDTH + grid_x;
+		
+		// If we're in bounds apply the pressure
+		if (index < tmpState1.Length) {
+			if(counter % 2 == 0)
+	            tmpState1[index] = pressure;
+	        else
+	            tmpState2[index] = pressure;
+		}
+		
 	}
 	
 	public int GetPressure(Vector2 screenCoordinates)
