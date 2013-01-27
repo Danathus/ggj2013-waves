@@ -8,6 +8,7 @@ public class Player
 		BLUE = 1,
 		GREEN = 2,
 		YELLOW = 3,
+		MAGENTA = 4,
 		WTF
 	};
 	
@@ -80,6 +81,7 @@ public class Player
 		case ColorCode.BLUE: return Color.blue; break;
 		case ColorCode.GREEN: return Color.green; break;
 		case ColorCode.YELLOW: return Color.yellow; break;
+		case ColorCode.MAGENTA: return Color.magenta; break;
 		default: return new Color(255, 0, 255, 255);
 		}
 	}
@@ -89,6 +91,7 @@ public class Player
 		else if(c== Color.blue) return ColorCode.BLUE;
 		else if(c == Color.green) return ColorCode.GREEN;
 		else if(c == Color.yellow) return ColorCode.YELLOW;
+		if (c == Color.magenta) return ColorCode.MAGENTA;
 		return ColorCode.WTF;
 	}
 	
@@ -98,6 +101,7 @@ public class Player
 		if (name == "Blue") return ColorCode.BLUE;
 		if (name == "Green") return ColorCode.GREEN;
 		if (name == "Yellow") return ColorCode.YELLOW;
+		if (name == "Magenta") return ColorCode.MAGENTA;
 		return ColorCode.WTF;
 	}
 	

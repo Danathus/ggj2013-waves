@@ -60,7 +60,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	{
 		audio.volume = Mathf.Clamp((float)enemies.Count / 5, 0.5f, 1.0f);
 		audio.pitch = Mathf.Clamp((float)enemies.Count/5 + 1.0f, 1.0f, 2.5f);
-		Debug.Log (audio.volume);
+		//Debug.Log (audio.volume);
 	}
 	
 	// -------------------------------------------------------------------------
@@ -261,7 +261,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			float randomAngleDeg = Random.Range(0, 360.0f);
 			float randomAngleRad = randomAngleDeg * Mathf.Deg2Rad;
 			Vector3 pos = (new Vector3(Mathf.Cos(randomAngleRad), Mathf.Sin(randomAngleRad), 0)) * screenRadius;
-			Debug.Log("screenPos " + screenPos + "; worldPos " + worldPos);
+			//Debug.Log("screenPos " + screenPos + "; worldPos " + worldPos);
 			//Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, 0));
 			//Vector3 pos = new Vector3(-3.0f, -3.0f, 0.0f); //Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
 			//pos = new Vector3(pos.x, pos.y, 0);
@@ -279,6 +279,22 @@ public class GameManager : MonoSingleton<GameManager> {
 			enemy.Initialize();
 
 			enemies.Add(enemy);
+		}
+
+		UpdateHeartbeat();
+	}
+
+	float heartbeatTimer = 2.0f;
+	void UpdateHeartbeat()
+	{
+		heartbeatTimer -= Time.deltaTime;
+		Debug.Log(heartbeatTimer);
+		if (heartbeatTimer < 0)
+		{
+			heartbeatTimer += 2.0f;
+			Vector3 pos3d = Camera.main.WorldToScreenPoint(Vector3.zero);
+			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+			waveField.SetPressure(pos2d, 1 << 16, Player.ColorCode.MAGENTA); //15);
 		}
 	}
 	
