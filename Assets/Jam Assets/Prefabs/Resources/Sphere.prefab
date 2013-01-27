@@ -133,7 +133,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42bee9c02b498c3448c6013f44e4224e, type: 3}
   m_Name: 
-  beatsPerSecond: 1
+  beatsPerSecond: 5
+  baseRadius: 1.75
+  amplitude: .200000003
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

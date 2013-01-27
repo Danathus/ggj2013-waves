@@ -60,8 +60,8 @@ public class GameManager : MonoSingleton<GameManager> {
 		
 		// procedurally alter a pulse
 		Pulse mypulse = player[0].gameObj.GetComponentInChildren<Pulse>();
-		mypulse.beatsPerSecond = 2;
-		mypulse.amplitude = 2;
+		//mypulse.beatsPerSecond = 2;
+		//mypulse.amplitude = 2;
 		mypulse.renderer.material.SetColor ("_PulseColor", Color.blue);
 		
 		mypulse = player[1].gameObj.GetComponentInChildren<Pulse>();
