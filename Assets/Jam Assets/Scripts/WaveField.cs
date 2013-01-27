@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PressureField
 {
-	const int WIDTH = 128;
-    const int HEIGHT = 96;
+	const int WIDTH = 1024/4;//128;
+    const int HEIGHT = 768/4;//96;
 	const int TOTAL_PIXELS = WIDTH * HEIGHT;
 	const int ROW_STRIDE = WIDTH;// * 4;
 	int scale = 10;
@@ -112,7 +112,8 @@ public class PressureField
             dest[i] = (((source[i-1] + source[i+1] + source[i-WIDTH] + source[i+WIDTH])  >> 1) ) - dest[i];
 			// dampen
             //dest[i] -= (dest[i] >> 7);
-			dest[i] -= (dest[i] >> 4);
+			//dest[i] -= (dest[i] >> 4);
+			dest[i] -= (dest[i] >> 5);
         }
     }
 

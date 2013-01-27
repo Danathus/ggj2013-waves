@@ -76,20 +76,26 @@ public class GameManager : MonoSingleton<GameManager> {
 
 	float hackWaveTimer = 1.0f;
 	// Update is called once per frame
-	void Update () {
-		for (int i = 0; i < numPlayers; ++i)
-		{
-			player[i].Update();
-		}
-		pressureField.Update();
-
+	void Update ()
+	{
+		bool makewaves = false;
 		hackWaveTimer -= Time.deltaTime;
 		if (hackWaveTimer < 0.0f)
 		{
-			Vector3 pos3d = Camera.main.WorldToScreenPoint(player[0].gameObj.transform.position);
-			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-			pressureField.SetPressure(pos2d, 1 << 15); //15);
+			makewaves = true;
 			hackWaveTimer += 0.5f;
 		}
+
+		for (int i = 0; i < numPlayers; ++i)
+		{
+			player[i].Update();
+			if (makewaves)
+			{
+				Vector3 pos3d = Camera.main.WorldToScreenPoint(player[i].gameObj.transform.position);
+				Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+				pressureField.SetPressure(pos2d, 1 << 16); //15);
+			}
+		}
+		pressureField.Update();
 	}
 }
