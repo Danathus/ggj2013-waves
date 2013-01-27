@@ -44,7 +44,16 @@ public class GameManager : MonoSingleton<GameManager> {
 		heartBeat = (AudioClip)Resources.Load ("GGJ13_Theme", typeof(AudioClip));
 		audio.clip = heartBeat;
 		audio.pitch = 1.5f;
+		audio.ignoreListenerVolume = true;
+		audio.minDistance = 10000.0f;
 		audio.Play();
+	}
+	
+	void UpdateAudio()
+	{
+		audio.volume = Mathf.Clamp((float)enemies.Count / 5, 0.5f, 1.0f);
+		audio.pitch = Mathf.Clamp((float)enemies.Count/5 + 1.0f, 1.0f, 2.5f);
+		Debug.Log (audio.volume);
 	}
 	
 	// -------------------------------------------------------------------------
@@ -163,6 +172,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			GameObject.Destroy(killme.gameObj);
 		}
 		waveField.Update();
+		UpdateAudio();
 
 		// update camera shake
 		UpdateCameraShake();
