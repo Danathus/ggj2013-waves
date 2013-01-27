@@ -169,7 +169,12 @@ public class Player
 		Pulse mypulse = gameObj.GetComponentInChildren<Pulse>();
 		//mypulse.amplitude = pulseStrength / maxPulseStrength;
 		//mypulse.amplitude *= mypulse.amplitude;
-		mypulse.baseRadius = 1.0f + ((pulseStrength - minPulseStrength) / (maxPulseStrength - minPulseStrength));
+		
+		float percentMaxStrength = ((pulseStrength - minPulseStrength) / (maxPulseStrength - minPulseStrength));
+		float curvedStrength = Mathf.Pow(percentMaxStrength, 8.0f);
+		mypulse.baseRadius = 1.0f + curvedStrength;
+		mypulse.beatsPerSecond = 10.0f * curvedStrength;
+		
 		//
 		//mypulse.beatsPerSecond = pulseStrength / maxPulseStrength;
 		//mypulse.amplitude *= 2;
