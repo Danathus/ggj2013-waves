@@ -5,7 +5,7 @@ public class TestGameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Debug.Log(GameManager.instance.testValue);	
+		//Debug.Log(GameManager.instance.testValue);	
 	}
 	
 	// Update is called once per frame
