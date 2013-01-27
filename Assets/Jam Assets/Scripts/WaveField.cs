@@ -3,6 +3,13 @@ using System.Collections;
 
 public class WaveField
 {
+	public struct WavePixel {
+		public int red;
+		public int green;
+		public int blue;
+		public int yellow;
+	}
+	
 	const int WIDTH = 1024/4;//128;
     const int HEIGHT = 768/4;//96;
 	const int TOTAL_PIXELS = WIDTH * HEIGHT;
@@ -14,8 +21,8 @@ public class WaveField
     //var imageData;
     Color[] data;
     //var tmpState;
-	int[] tmpState1;
-	int[] tmpState2;
+	WavePixel[] tmpState1;
+	WavePixel[] tmpState2;
     
     int mx = 0, my = 0;
     bool mouseMove = false;
@@ -26,8 +33,8 @@ public class WaveField
     
     public void init()
 	{        
-        tmpState1 = new int[TOTAL_PIXELS];
-        tmpState2 = new int[TOTAL_PIXELS];
+        tmpState1 = new WavePixel[TOTAL_PIXELS];
+        tmpState2 = new WavePixel[TOTAL_PIXELS];
 		data = new Color[TOTAL_PIXELS];
 		
 		// create texture resolution at screen.width x screen.height
@@ -49,7 +56,8 @@ public class WaveField
 		return data[y*ROW_STRIDE + x];
     }
     //*/
-
+	
+	// ------------------------------------------------------------------------
 	Vector2 ConvertScreenCoordinatesToGridCoordinates(Vector2 screenCoordinates)
 	{
 		Vector2 normalizedScreenCoordinates = new Vector2(
@@ -61,6 +69,7 @@ public class WaveField
 		return gridCoordinates;
 	}
 	
+	// ------------------------------------------------------------------------
 	public void SetPressure(Vector2 screenCoordinates, int pressure) // think big, powers of 2
 	{
 		// todo: need to convert between real-space and grid-space
@@ -73,13 +82,14 @@ public class WaveField
 		// If we're in bounds apply the pressure
 		if (index < tmpState1.Length) {
 			if(counter % 2 == 0)
-	            tmpState1[index] = pressure;
+	            tmpState1[index].red = pressure;
 	        else
-	            tmpState2[index] = pressure;
+	            tmpState2[index].red = pressure;
 		}
 		
 	}
 	
+	// ------------------------------------------------------------------------
 	public int GetPressure(Vector2 screenCoordinates)
 	{
 		// todo: need to convert between real-space and grid-space
@@ -88,12 +98,13 @@ public class WaveField
 		int grid_y = (int)(gridCoordinates.y);
 		int pressure = 0;
 		if(counter % 2 == 0)
-            pressure = tmpState1[grid_y * WIDTH + grid_x ];
+            pressure = tmpState1[grid_y * WIDTH + grid_x].red;
         else
-            pressure = tmpState2[grid_y * WIDTH + grid_x ];
+            pressure = tmpState2[grid_y * WIDTH + grid_x].red;
 		return pressure;
 	}
     
+	// ------------------------------------------------------------------------
     void seedWorld()
     {
         for(var y = 0; y < HEIGHT; y++)
@@ -102,24 +113,25 @@ public class WaveField
             {
                 //tmpState1[y * WIDTH + x]  = 0;
                 //tmpState2[y * WIDTH + x ] = 0;
-				tmpState1[y * WIDTH + x]  = 0;
-                tmpState2[y * WIDTH + x ] = 0;
+				tmpState1[y * WIDTH + x].red  = 0;
+                tmpState2[y * WIDTH + x ].red = 0;
             }
         }
         
-        tmpState2[HEIGHT/2 * WIDTH + WIDTH /2] = 1 << 15; //12;
+        tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].red = 1 << 15; //12;
     }
     
-    void processWater(int[] source, int[] dest)
+	// ------------------------------------------------------------------------
+    void processWater(WavePixel[] source, WavePixel[] dest)
     {
         for (var i = WIDTH; i < TOTAL_PIXELS - WIDTH; i++)
         {
 			// blend in from adjacent cells
-            dest[i] = (((source[i-1] + source[i+1] + source[i-WIDTH] + source[i+WIDTH])  >> 1) ) - dest[i];
+            dest[i].red = (((source[i-1].red + source[i+1].red + source[i-WIDTH].red + source[i+WIDTH].red) >> 1)) - dest[i].red;
 			// dampen
             //dest[i] -= (dest[i] >> 7);
 			//dest[i] -= (dest[i] >> 4);
-			dest[i] -= (dest[i] >> 5);
+			dest[i].red -= (dest[i].red >> 5);
         }
     }
 
@@ -140,6 +152,7 @@ public class WaveField
     }
     //*/
     
+	// ------------------------------------------------------------------------
     void handleMouseInput()
     {
 		// hack
@@ -152,13 +165,14 @@ public class WaveField
             return;
         
         if(counter % 2 == 0)
-            tmpState1[my * WIDTH + mx ] = 4096;
+            tmpState1[my * WIDTH + mx].red = 4096;
         else
-            tmpState2[my * WIDTH + mx ] = 4096;
+            tmpState2[my * WIDTH + mx].red = 4096;
             
         mouseMove = false;
     }
     
+	// ------------------------------------------------------------------------
     public void Update(){		
 		// physical integration step
 		//*
@@ -179,10 +193,10 @@ public class WaveField
             for(var x = 0; x < WIDTH; x++)
             { 
                 //set the cell color
-                int val = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x] : tmpState1[y * WIDTH + x]) >> 4;
+                int val = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].red : tmpState1[y * WIDTH + x].red) >> 4;
                 
                 //clamp the value to the valid ranges.
-                if(val > 255 )
+                if(val > 255)
                     val = 255;
                 else if(val < 0)
                     val = 0;
