@@ -17,10 +17,11 @@ public class Enemy
 	Vector3 desiredPos;
 	float currAngle, desiredAngle;
 	Vector3 forward, right;
-	public Enemy()
+	public Enemy(Color color)
 	{
 		gameObj = (GameObject)GameObject.Instantiate(cubePrefab);
 		gameObj.name = "Enemy #" + ++enemyCount;
+		gameObj.renderer.material.color = color;
 	}
 
 	// Use this for initialization

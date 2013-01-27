@@ -15,6 +15,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	string formatXAxis;
 	string formatYAxis;
 	Dictionary<int, string> playerToColor;
+	List<Color> l_pColor;
 	
 	List<Enemy> enemies;
 	Vector3 cameraStartPosition;
@@ -67,6 +68,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	// -------------------------------------------------------------------------
 	void StartPlayers()
 	{
+		l_pColor = new List<Color>();
 		if(PlayerPrefs.GetString("Player0") == "Blue"){
 			playerToColor[numPlayers] = "Blue";
 			++numPlayers;
@@ -87,10 +89,34 @@ public class GameManager : MonoSingleton<GameManager> {
 		for (int id = 0; id < numPlayers; ++id)
 		{
 			player[id] = new Player(id, Player.colorCodeFromName(playerToColor[id]));
+			l_pColor.Add (Player.toColor (player[id].playerColor));
 			player[id].gameObj.transform.position += Vector3.right * id;
 			player[id].waveField = waveField;
 		}
-
+		
+		for(int i = 0; i < numPlayers; ++i){
+			for(int j = i + 1; j < numPlayers; ++j){
+				if(i == j)
+					continue;
+				float red = Mathf.Clamp (Player.toColor(player[i].playerColor).r + Player.toColor(player[j].playerColor).r, 0f, 1f);
+				float green = Mathf.Clamp (Player.toColor(player[i].playerColor).g + Player.toColor(player[j].playerColor).g, 0f, 1f);
+				float blue = Mathf.Clamp (Player.toColor(player[i].playerColor).b + Player.toColor(player[j].playerColor).b, 0f, 1f);
+				float alpha = Mathf.Clamp (Player.toColor (player[i].playerColor).a + Player.toColor(player[j].playerColor).a, 0f,1f);
+				Color nColor = new Color(red, green, blue, alpha);
+				l_pColor.Add (nColor);
+				for(int k = j + 1; k < numPlayers; ++k){
+					if(i == k && j == k)
+						continue;
+					red = Mathf.Clamp (Player.toColor(player[i].playerColor).r + Player.toColor(player[j].playerColor).r + Player.toColor(player[k].playerColor).r, 0f, 1f);
+					green = Mathf.Clamp (Player.toColor(player[i].playerColor).g + Player.toColor(player[j].playerColor).g + Player.toColor(player[k].playerColor).g, 0f, 1f);
+					blue = Mathf.Clamp (Player.toColor(player[i].playerColor).b + Player.toColor(player[j].playerColor).b + Player.toColor(player[k].playerColor).b, 0f, 1f);
+					alpha = Mathf.Clamp (Player.toColor (player[i].playerColor).a + Player.toColor(player[j].playerColor).a + Player.toColor(player[k].playerColor).a, 0f,1f);
+					nColor = new Color(red, green, blue, alpha);
+					l_pColor.Add (nColor);
+				}
+			}
+		}
+		
 		PositionPlayersAroundHeart();
 		
 		for(int i = 0; i < numPlayers; ++i){
@@ -258,8 +284,9 @@ public class GameManager : MonoSingleton<GameManager> {
 			spawnNextEnemyTimeout += spawnNextEnemyTimeoutChange;
 			if (spawnNextEnemyTimeout < 0.5f) spawnNextEnemyTimeoutChange = Mathf.Abs(spawnNextEnemyTimeoutChange);
 			if (spawnNextEnemyTimeout > 3.0f) spawnNextEnemyTimeoutChange = -Mathf.Abs(spawnNextEnemyTimeoutChange);
-
-			Enemy enemy = new Enemy();
+			
+			int r_Color = Random.Range (0, l_pColor.Count);
+			Enemy enemy = new Enemy(l_pColor[r_Color]);
 			enemy.waveField = waveField;
 
 			// position the enemy
