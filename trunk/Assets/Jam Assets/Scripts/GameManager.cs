@@ -9,9 +9,11 @@ public class GameManager : MonoSingleton<GameManager> {
 
 	AudioClip heartBeat;
 	
-	int numPlayers = 4;
+	int numPlayers = 0;
 	Player[] player;
 	WaveField waveField;
+	string formatXAxis;
+	string formatYAxis;
 	
 	List<Enemy> enemies;
 	Vector3 cameraStartPosition;
@@ -61,6 +63,14 @@ public class GameManager : MonoSingleton<GameManager> {
 	// -------------------------------------------------------------------------
 	void StartPlayers() {
 		
+		if(PlayerPrefs.GetString("Player0") == "Blue")
+			++numPlayers;
+		if(PlayerPrefs.GetString("Player1") == "Green")
+			++numPlayers;
+		if(PlayerPrefs.GetString("Player2") == "Red")
+			++numPlayers;
+		if(PlayerPrefs.GetString("Player3") == "Yellow")
+			++numPlayers;
 		player = new Player[numPlayers];
 		for (int id = 0; id < numPlayers; ++id)
 		{
@@ -68,31 +78,69 @@ public class GameManager : MonoSingleton<GameManager> {
 			player[id].gameObj.transform.position += Vector3.right * id;
 			player[id].waveField = waveField;
 		}
-		
+
 		PositionPlayersAroundHeart();
 		
-		player[0].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, "L_XAxis_1", "L_YAxis_1");
-		player[1].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, "L_XAxis_2", "L_YAxis_2");
-		player[2].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, "L_XAxis_3", "L_YAxis_3");
-		player[3].Initialize(KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, "L_XAxis_4", "L_YAxis_4");
+		for(int i = 0; i < numPlayers; ++i){
+			if(i == 0){
+				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = formatXAxis.Replace("0","");
+				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = formatYAxis.Replace("0","");
+				player[i].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, formatXAxis, formatYAxis);
+			}
+			
+			if(i == 1){
+				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = formatXAxis.Replace("0","");
+				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = formatYAxis.Replace("0","");
+				player[i].Initialize(KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, formatXAxis, formatYAxis);
+			}
+				
+			if(i == 2){
+				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = formatXAxis.Replace("0","");
+				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = formatYAxis.Replace("0","");
+				player[i].Initialize(KeyCode.T, KeyCode.F, KeyCode.G, KeyCode.H, formatXAxis, formatYAxis);
+			}
+				
+			if(i == 3){
+				formatXAxis = "L_XAxis_"+i+1;
+				formatXAxis = formatXAxis.Replace("0","");
+				formatYAxis = "L_YAxis_"+i+1;
+				formatYAxis = formatYAxis.Replace("0","");
+				player[i].Initialize(KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, formatXAxis, formatYAxis);
+			}
+		}
 	}
 	
 	// -------------------------------------------------------------------------
 	void ConfigurePlayerColors() {
 		// procedurally alter a pulse
-		Pulse mypulse = player[0].gameObj.GetComponentInChildren<Pulse>();
-		//mypulse.beatsPerSecond = 2;
-		//mypulse.amplitude = 2;
-		mypulse.renderer.material.SetColor ("_PulseColor", Color.blue);
+		Pulse mypulse;
+		for(int i = 0; i < numPlayers; ++i){
+			if(PlayerPrefs.GetString("Player0") == "Blue"){
+				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
+				mypulse.renderer.material.SetColor ("_PulseColor", Color.blue);
+			}
 		
-		mypulse = player[1].gameObj.GetComponentInChildren<Pulse>();
-		mypulse.renderer.material.SetColor ("_PulseColor", Color.green);
-
-		mypulse = player[2].gameObj.GetComponentInChildren<Pulse>();
-		mypulse.renderer.material.SetColor ("_PulseColor", Color.red);
-		
-		mypulse = player[3].gameObj.GetComponentInChildren<Pulse>();
-		mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
+			if(PlayerPrefs.GetString("Player1") == "Green"){
+				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
+				mypulse.renderer.material.SetColor ("_PulseColor", Color.green);
+			}
+			
+			if(PlayerPrefs.GetString("Player2") == "Red"){
+				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
+				mypulse.renderer.material.SetColor ("_PulseColor", Color.red);
+			}
+			
+			if(PlayerPrefs.GetString("Player3") == "Yellow"){
+				mypulse = player[i].gameObj.GetComponentInChildren<Pulse>();
+				mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
+			}
+		}
 	}
 
 	float spawnNextEnemyTimeout = 3.0f;

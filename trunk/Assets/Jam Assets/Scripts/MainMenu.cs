@@ -22,9 +22,7 @@ public class MainMenu : MonoBehaviour {
 		GUI.Label (new Rect(Screen.width/8, Screen.height - 70, 440, 40), "Made by: Alexandr Syskin, Danny McCue, and Michael Guerrero");
 		
 		if (GUI.Button (new Rect (Screen.width / 4 + 60, Screen.height /2 - 70, 140, 50), "Character Selection")) {
-			if(Input.GetButton("A_1"))
-				GUI.FocusControl("Play");
-			//Application.LoadLevel("TestScene");
+			Application.LoadLevel("CharSelectionScene");
 			//print ("You clicked the button!");
 			//Popup.List (new Rect(10,10,150,100),ref showList, ref menuOpt, content, popUpList, GUIStyle.none, callBack);
 		}
