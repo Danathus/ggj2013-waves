@@ -11,10 +11,10 @@ public class Heart : MonoBehaviour {
 	
 	// for scaling the light away and toward the heart
 	public Transform childLight;
-	public float maxLightScale = 2.0f;
-	public float minLightScale = 1.0f;
+	public float lightScale = 2.0f;
 	
-	Vector3 originalScale;	
+	Vector3 originalScale;
+	Vector3 originalLightPos;
 	
 	Transform thisTransform;
 
@@ -23,6 +23,7 @@ public class Heart : MonoBehaviour {
 		
 		thisTransform = transform;
 		originalScale = thisTransform.localScale;
+		originalLightPos = childLight.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -39,6 +40,7 @@ public class Heart : MonoBehaviour {
 		
 		thisTransform.localScale = newHeartScale;
 		
-		//childLight.transform.position = Vector3.zero;
+		childLight.transform.position = 
+			Vector3.Lerp(originalLightPos, originalLightPos - Vector3.forward * lightScale, percentScale);
 	}
 }
