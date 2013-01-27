@@ -112,8 +112,8 @@ public class GameManager : MonoSingleton<GameManager> {
 			player[i].Update();
 			// don't let players leave the space
 			Vector3 screenPos3d = Camera.main.WorldToScreenPoint(player[i].gameObj.transform.position);
-			screenPos3d.x = Mathf.Clamp(screenPos3d.x, 0, Camera.main.pixelWidth);
-			screenPos3d.y = Mathf.Clamp(screenPos3d.y, 0, Camera.main.pixelHeight);
+			screenPos3d.x = Mathf.Clamp(screenPos3d.x, 10.0f, Camera.main.pixelWidth-10.0f);
+			screenPos3d.y = Mathf.Clamp(screenPos3d.y, 10.0f, Camera.main.pixelHeight-10.0f);
 			player[i].gameObj.transform.position = Camera.main.ScreenToWorldPoint(screenPos3d);
 
 			// don't let players overlap the heart
