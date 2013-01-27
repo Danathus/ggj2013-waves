@@ -93,9 +93,20 @@ public class GameManager : MonoSingleton<GameManager> {
 		{
 			player[i].Update();
 		}
+		List<Enemy> killthese = new List<Enemy>();
 		foreach (Enemy enemy in enemies)
 		{
 			enemy.Update();
+			if ((enemy.gameObj.transform.position - heart.transform.position).sqrMagnitude < 1.0f)
+			{
+				// for now, remove the enemy
+				killthese.Add(enemy);
+			}
+		}
+		foreach (Enemy killme in killthese)
+		{
+			enemies.Remove(killme);
+			GameObject.Destroy(killme.gameObj);
 		}
 		waveField.Update();
 
