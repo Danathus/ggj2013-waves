@@ -7,6 +7,8 @@ public class Player
 	public KeyCode up, down, left, right;
 	public string leftMoveAxis, rightMoveAxis;
 	public float unitsPerSecond = 10.0f;
+	public WaveField waveField;
+	float heartbeatTimer = 0.0f;
 
 	public Player()
 	{
@@ -49,5 +51,15 @@ public class Player
 		
 		// move player by direction
 		gameObj.transform.position += direction * Time.deltaTime * unitsPerSecond;
+
+		// update heartbeat
+		heartbeatTimer -= Time.deltaTime;
+		if (heartbeatTimer < 0.0f)
+		{
+			Vector3 pos3d = Camera.main.WorldToScreenPoint(gameObj.transform.position);
+			Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
+			waveField.SetPressure(pos2d, 1 << 16); //15);
+			heartbeatTimer += 0.5f;
+		}
 	}
 }

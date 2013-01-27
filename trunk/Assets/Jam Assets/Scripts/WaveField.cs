@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PressureField
+public class WaveField
 {
 	const int WIDTH = 1024/4;//128;
     const int HEIGHT = 768/4;//96;
@@ -195,6 +195,7 @@ public class PressureField
     }
 }
 
+/*
 public class WaveField // there can be only one!
 {
 	// constant
@@ -243,19 +244,18 @@ public class WaveField // there can be only one!
 
 	void Update()
 	{
-		/*
-		Vector3 downLeft  = (Vector3.down + Vector3.left).normalized;
-		Vector3 downRight = (Vector3.down + Vector3.right).normalized;
-		Vector3 upLeft    = (Vector3.up + Vector3.left).normalized;
-		Vector3 upRight   = (Vector3.up + Vector3.right).normalized;
+		//Vector3 downLeft  = (Vector3.down + Vector3.left).normalized;
+		//Vector3 downRight = (Vector3.down + Vector3.right).normalized;
+		//Vector3 upLeft    = (Vector3.up + Vector3.left).normalized;
+		//Vector3 upRight   = (Vector3.up + Vector3.right).normalized;
 
 		// propagate the wave fields
-		for (int y = 1; y < kPointFieldHeight-1; ++y)
-		{
-			for (int x = 1; x < kPointFieldWidth-1; ++x)
-			{
-				WavePoint nextPt = GetPoint(nextBufferIdx, x, y);
-				nextPt.direction = Vector3.zero +
+		//for (int y = 1; y < kPointFieldHeight-1; ++y)
+		//{
+		//	for (int x = 1; x < kPointFieldWidth-1; ++x)
+		//	{
+		//		WavePoint nextPt = GetPoint(nextBufferIdx, x, y);
+		//		nextPt.direction = Vector3.zero +
 					//Vector3.Dot(GetPoint(currBufferIdx, x-1, y-1).direction, downLeft) +
 					//Vector3.Dot(GetPoint(currBufferIdx, x  , y-1).direction, Vector3.down) +
 					//Vector3.Dot(GetPoint(currBufferIdx, x+1, y-1).direction, downRight) +
@@ -264,10 +264,10 @@ public class WaveField // there can be only one!
 					//Vector3.Dot(GetPoint(currBufferIdx, x+1, y  ).direction, Vector3.right) +
 					//Vector3.Dot(GetPoint(currBufferIdx, x-1, y+1).direction, upLeft) +
 					//Vector3.Dot(GetPoint(currBufferIdx, x  , y+1).direction, Vector3.up) +
-					Vector3.Dot(GetPoint(currBufferIdx, x+1, y+1).direction, upRight);
-				nextPt.direction /= 9;
-			}
-		}
-		//*/
+		//			Vector3.Dot(GetPoint(currBufferIdx, x+1, y+1).direction, upRight);
+		//		nextPt.direction /= 9;
+		//	}
+		//}
 	}
 }
+//*/
