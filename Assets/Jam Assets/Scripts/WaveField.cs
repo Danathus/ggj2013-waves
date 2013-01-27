@@ -14,7 +14,7 @@ public class WaveField
     readonly int HEIGHT;
 	readonly int TOTAL_PIXELS;
 	readonly int ROW_STRIDE;
-	int scale = 10;
+	//int scale = 10;
     
     int counter = 0;
     //var linePosition = 0;
@@ -34,7 +34,7 @@ public class WaveField
 	    HEIGHT = 768 / 4;//96;
 		TOTAL_PIXELS = WIDTH * HEIGHT;
 		ROW_STRIDE = WIDTH;// * 4;
-		scale = 10;
+		//scale = 10;
 	}
 
     //window.addEventListener('load', init, false);
@@ -200,17 +200,23 @@ public class WaveField
             for(var x = 0; x < WIDTH; x++)
             { 
                 //set the cell color
-                int val = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].red : tmpState1[y * WIDTH + x].red) >> 4;
-                
+                int redValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].red : tmpState1[y * WIDTH + x].red) >> 4;
+				int greenValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].green : tmpState1[y * WIDTH + x].green) >> 4;
+				int blueValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].blue : tmpState1[y * WIDTH + x].blue) >> 4;
+				int yellowValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].yellow : tmpState1[y * WIDTH + x].yellow) >> 4;
+				
                 //clamp the value to the valid ranges.
-                if(val > 255)
-                    val = 255;
-                else if(val < 0)
-                    val = 0;
-                float fval = (float)val / 255.0f;
-                data[y * ROW_STRIDE + x].r = fval;
-                data[y * ROW_STRIDE + x].g = fval;
-                data[y * ROW_STRIDE + x].b = fval;
+				redValue = Mathf.Clamp(redValue + yellowValue / 2, 0, 255);
+				greenValue = Mathf.Clamp(greenValue + yellowValue / 2, 0, 255);
+				blueValue = Mathf.Clamp(blueValue, 0, 255);				
+				
+                float redFloat = (float)redValue / 255.0f;
+				float greenFloat = (float)greenValue / 255.0f;
+				float blueFloat = (float)blueValue / 255.0f;
+				
+                data[y * ROW_STRIDE + x].r = redFloat;
+                data[y * ROW_STRIDE + x].g = greenFloat;
+                data[y * ROW_STRIDE + x].b = blueFloat;
                 data[y * ROW_STRIDE + x].a = 1.0f;//255;              
             }
         }
