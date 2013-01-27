@@ -314,26 +314,38 @@ public class WaveField
         for(var y = 0; y < HEIGHT; y++)
         {
             for(var x = 0; x < WIDTH; x++)
-            { 
-                //set the cell color
-                int redValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].red : tmpState1[y * WIDTH + x].red) >> 4;
-				int greenValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].green : tmpState1[y * WIDTH + x].green) >> 4;
-				int blueValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].blue : tmpState1[y * WIDTH + x].blue) >> 4;
-				int yellowValue = 127 + ((counter % 2 == 0) ? tmpState2[y * WIDTH + x].yellow : tmpState1[y * WIDTH + x].yellow) >> 4;
-				
-                //clamp the value to the valid ranges.
-				redValue = Mathf.Clamp(redValue + yellowValue / 2, 0, 255);
+            {
+				//
+				//set the cell color
+				WavePixel curr = (counter % 2 == 0) ? tmpState2[y * WIDTH + x] : tmpState1[y * WIDTH + x];
+				int redValue    = 127 + curr.red    >> 4;
+				int greenValue  = 127 + curr.green  >> 4;
+				int blueValue   = 127 + curr.blue   >> 4;
+				int yellowValue = 127 + curr.yellow >> 4;
+
+				//clamp the value to the valid ranges.
+				redValue   = Mathf.Clamp(redValue   + yellowValue / 2, 0, 255);
 				greenValue = Mathf.Clamp(greenValue + yellowValue / 2, 0, 255);
-				blueValue = Mathf.Clamp(blueValue, 0, 255);				
+				blueValue  = Mathf.Clamp(blueValue,                    0, 255);
 				
-                float redFloat = (float)redValue / 255.0f;
+				// if the pulse is too weak to be effective, pale it out
+				float amplitude = WaveField.WavePixelAmplitude(curr);
+				if (amplitude > 256 && amplitude < Enemy.tooMuchPressure/2)
+				{
+					redValue   = (redValue   + 127)/2;
+					greenValue = (greenValue + 127)/2;
+					blueValue  = (blueValue  + 127)/2;
+					//redValue = greenValue = blueValue = 255;
+				}
+
+				float redFloat   = (float)redValue   / 255.0f;
 				float greenFloat = (float)greenValue / 255.0f;
-				float blueFloat = (float)blueValue / 255.0f;
-				
+				float blueFloat  = (float)blueValue  / 255.0f;
+
                 data[y * ROW_STRIDE + x].r = redFloat;
                 data[y * ROW_STRIDE + x].g = greenFloat;
                 data[y * ROW_STRIDE + x].b = blueFloat;
-                data[y * ROW_STRIDE + x].a = 1.0f;//255;              
+                data[y * ROW_STRIDE + x].a = 1.0f;//255;
             }
         }
 
