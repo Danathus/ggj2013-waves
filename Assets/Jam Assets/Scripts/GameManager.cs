@@ -21,9 +21,12 @@ public class GameManager : MonoSingleton<GameManager> {
 	Vector3 cameraStartPosition;
 	float shakeMagnitude = 0.0f;
 	
+	float restartTimeout;
+	
 	// Use this for initialization ---------------------------------------------
 	void Start()
-	{		
+	{
+		restartTimeout = 5.0f;
 		StartAudio();		
 				
 		playerToColor = new Dictionary<int, string>();
@@ -215,7 +218,10 @@ public class GameManager : MonoSingleton<GameManager> {
 	{
 		for (int i = 0; i < numPlayers; ++i)
 		{
-			player[i].Update();
+			if (!heart.dead)
+			{
+				player[i].Update();
+			}
 			// don't let players leave the space
 			Vector3 screenPos3d = Camera.main.WorldToScreenPoint(player[i].gameObj.transform.position);
 			screenPos3d.x = Mathf.Clamp(screenPos3d.x, 10.0f, Camera.main.pixelWidth-10.0f);
@@ -291,6 +297,16 @@ public class GameManager : MonoSingleton<GameManager> {
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
 			Time.timeScale = 10.0f;
+		}
+		
+		// restart management
+		if (heart.dead)
+		{
+			restartTimeout -= Time.deltaTime;
+			if (restartTimeout < 0.0f)
+			{
+				Application.LoadLevel("MainMenuScene");
+			}
 		}
 	}
 	
