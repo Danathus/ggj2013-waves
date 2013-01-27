@@ -85,6 +85,7 @@ public class WaveField
 		Vector2 gridCoordinates = ConvertScreenCoordinatesToGridCoordinates(screenCoordinates);
 		int grid_x = (int)(gridCoordinates.x);
 		int grid_y = (int)(gridCoordinates.y);
+		if (grid_x < 0 || grid_x >= WIDTH || grid_y < 0 || grid_y >= HEIGHT) return;
 		int index = grid_y * WIDTH + grid_x;
 		
 		// If we're in bounds apply the pressure
