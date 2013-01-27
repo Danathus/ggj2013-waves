@@ -8,6 +8,8 @@ public class Utility  {
 		
 		Mesh plane = new Mesh();
 		Vector3[] verts = new Vector3[4];
+		Color[] colors = new Color[4] { Color.white, Color.white, Color.white, Color.white };
+		Vector2[] uvs = new Vector2[4];
 		int[] tris = new int[6] { 0, 1, 2, 2, 1, 3 };
 		
 		Camera cam = Camera.main;
@@ -22,8 +24,15 @@ public class Utility  {
 		verts[2] = center - Vector3.right * halfWidth - Vector3.up * halfHeight;
 		verts[3] = center + Vector3.right * halfWidth - Vector3.up * halfHeight;
 		
+		uvs[0] = new Vector2(0.0f, 1.0f);
+		uvs[1] = new Vector2(1.0f, 1.0f);
+		uvs[2] = new Vector2(0.0f, 0.0f);
+		uvs[3] = new Vector2(1.0f, 0.0f);
+		
 		plane.vertices = verts;
-		plane.triangles = tris;		
+		plane.colors = colors;
+		plane.triangles = tris;	
+		plane.uv = uvs;
 		
 		return plane;
 	}
