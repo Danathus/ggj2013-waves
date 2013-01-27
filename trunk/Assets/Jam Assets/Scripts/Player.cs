@@ -107,6 +107,7 @@ public class Player
 	}
 
 	static float maxPulseStrength = 16;
+	static float minPulseStrength = 10;
 	public float pulseStrength = maxPulseStrength;
 	void EmitPulse()
 	{
@@ -114,6 +115,7 @@ public class Player
 		Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
 		waveField.SetPressure(pos2d, 1 << (int)pulseStrength, this.playerColor);
 		pulseStrength -= 1;
+		if (pulseStrength < minPulseStrength) pulseStrength = minPulseStrength;
 	}
 	
 	public void Update()
@@ -158,11 +160,18 @@ public class Player
 		//*/
 
 		// hacked special controls for now
-		//if (Input.GetButton("A_1"))
 		if (Input.GetButtonDown(pulseButton))
 		{
 			EmitPulse();
 		}
-		// hacked special controls for now
+
+		// visualize the player's strength with the pulse amplitude
+		Pulse mypulse = gameObj.GetComponentInChildren<Pulse>();
+		//mypulse.amplitude = pulseStrength / maxPulseStrength;
+		//mypulse.amplitude *= mypulse.amplitude;
+		mypulse.baseRadius = 1.0f + ((pulseStrength - minPulseStrength) / (maxPulseStrength - minPulseStrength));
+		//
+		//mypulse.beatsPerSecond = pulseStrength / maxPulseStrength;
+		//mypulse.amplitude *= 2;
 	}
 }
