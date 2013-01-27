@@ -365,7 +365,10 @@ public class GameManager : MonoSingleton<GameManager> {
 	IEnumerator KillEnemy(Enemy enemy, bool killImmediately = false) {
 		enemy.dead = true;
 					
+		enemy.gameObj.audio.Play();
 		yield return null;	
+		
+		yield return null;
 		
 		Transform enemyTransform = enemy.gameObj.transform;
 		Transform heartTransform = heart.transform;

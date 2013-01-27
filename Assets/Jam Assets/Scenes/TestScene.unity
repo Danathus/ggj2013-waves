@@ -588,6 +588,7 @@ MonoBehaviour:
   health: 3
   regenRate: .100000001
   hitDamage: 1
+  dead: 0
 --- !u!1 &1438779677
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,6 +696,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ce716e86f0aa97459679a1d3d9b3caf, type: 3}
   m_Name: 
+  gameTime: 0
 --- !u!82 &1617454425
 AudioSource:
   m_ObjectHideFlags: 0
@@ -786,7 +788,7 @@ GUIText:
   m_TabSize: 4
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Material: {fileID: 0}
-  m_FontSize: 64
+  m_FontSize: 32
   m_FontStyle: 0
   m_PixelCorrect: 1
   m_RichText: 1
