@@ -12,7 +12,7 @@ public class GameManager : MonoSingleton<GameManager> {
 	
 	private int numPlayers = 4;
 	Player[] player;
-	PressureField pressureField;
+	WaveField waveField;
 	
 	// Use this for initialization
 	void Start () {
@@ -37,6 +37,10 @@ public class GameManager : MonoSingleton<GameManager> {
 		matColor[3].color = Color.yellow;
 		//matColor = (Material)Resources.Load ("mat", typeof(Material));
 		//matColor.color = Color.blue;
+		
+		waveField = new WaveField();
+		waveField.init();
+
 		player = new Player[numPlayers];
 		for (int i = 0; i < numPlayers; ++i)
 		{
@@ -44,6 +48,7 @@ public class GameManager : MonoSingleton<GameManager> {
 			player[i].gameObj = (GameObject)GameObject.Instantiate(spherePrefab);
 			player[i].gameObj.renderer.material = matColor[i];
 			player[i].gameObj.transform.position += Vector3.right * i;
+			player[i].waveField = waveField;
 		}
 		
 		player[0].Initialize(KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow, "L_XAxis_1", "L_YAxis_1");
@@ -66,36 +71,18 @@ public class GameManager : MonoSingleton<GameManager> {
 		mypulse = player[3].gameObj.GetComponentInChildren<Pulse>();
 		mypulse.renderer.material.SetColor ("_PulseColor", Color.yellow);
 		
-		pressureField = new PressureField();
-		pressureField.init();
-		
 		planeMeshRenderer = (MeshRenderer)((GameObject)GameObject.Instantiate(Resources.Load("waveMesh"))).renderer;
 		planeMeshRenderer.GetComponent<MeshFilter>().mesh = Utility.CreateFullscreenPlane(100.0f);
-		planeMeshRenderer.material.mainTexture = pressureField.texture;
+		planeMeshRenderer.material.mainTexture = waveField.texture;
 	}
 
-	float hackWaveTimer = 1.0f;
 	// Update is called once per frame
 	void Update ()
 	{
-		bool makewaves = false;
-		hackWaveTimer -= Time.deltaTime;
-		if (hackWaveTimer < 0.0f)
-		{
-			makewaves = true;
-			hackWaveTimer += 0.5f;
-		}
-
 		for (int i = 0; i < numPlayers; ++i)
 		{
 			player[i].Update();
-			if (makewaves)
-			{
-				Vector3 pos3d = Camera.main.WorldToScreenPoint(player[i].gameObj.transform.position);
-				Vector2 pos2d = new Vector2(pos3d.x, pos3d.y);
-				pressureField.SetPressure(pos2d, 1 << 16); //15);
-			}
 		}
-		pressureField.Update();
+		waveField.Update();
 	}
 }
