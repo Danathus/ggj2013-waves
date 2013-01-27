@@ -164,24 +164,50 @@ public class WaveField
 		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].yellow = 1 << 15;//12;
     }
     //*/
-    
+
 	// ------------------------------------------------------------------------
     void processWater(WavePixel[] source, WavePixel[] dest)
     {
         for (var i = WIDTH; i < TOTAL_PIXELS - WIDTH; i++)
         {
 			// blend in from adjacent cells
-            dest[i].red = (((source[i-1].red + source[i+1].red + source[i-WIDTH].red + source[i+WIDTH].red) >> 1)) - dest[i].red;
-			dest[i].green = (((source[i-1].green + source[i+1].green + source[i-WIDTH].green + source[i+WIDTH].green) >> 1)) - dest[i].green;
-			dest[i].blue = (((source[i-1].blue + source[i+1].blue + source[i-WIDTH].blue + source[i+WIDTH].blue) >> 1)) - dest[i].blue;
+            dest[i].red    = (((source[i-1].red    + source[i+1].red    + source[i-WIDTH].red    + source[i+WIDTH].red)    >> 1)) - dest[i].red;
+			dest[i].green  = (((source[i-1].green  + source[i+1].green  + source[i-WIDTH].green  + source[i+WIDTH].green)  >> 1)) - dest[i].green;
+			dest[i].blue   = (((source[i-1].blue   + source[i+1].blue   + source[i-WIDTH].blue   + source[i+WIDTH].blue)   >> 1)) - dest[i].blue;
 			dest[i].yellow = (((source[i-1].yellow + source[i+1].yellow + source[i-WIDTH].yellow + source[i+WIDTH].yellow) >> 1)) - dest[i].yellow;
+
+			// experimentation -- let colors combine powers
+			int blue    = dest[i].blue;
+			int red     = dest[i].red;
+			int green   = dest[i].green;
+			int yellow  = dest[i].yellow;
+			int threshold = 1 << 7;
+			if (red > (1 << 7) && blue > (1 << 7))
+			{
+				dest[i].red  += blue >> 5; // 5
+				dest[i].blue += red  >> 5;
+			}
+			//
+
 			// dampen
             //dest[i] -= (dest[i] >> 7);
 			//dest[i] -= (dest[i] >> 4);
+
 			int dampen_exponent = 4; //5;
-			dest[i].red -= (dest[i].red >> dampen_exponent);
-			dest[i].green -= (dest[i].green >> dampen_exponent);
-			dest[i].blue -= (dest[i].blue >> dampen_exponent);
+			/*
+			// testing out: the more active components, the less we dampen
+			int numcomponents =
+				((red    > threshold) ? 1 : 0) +
+				((blue   > threshold) ? 1 : 0) +
+				((green  > threshold) ? 1 : 0) +
+				((yellow > threshold) ? 1 : 0);
+			dampen_exponent = 5 - numcomponents;
+			//*/
+			//
+
+			dest[i].red    -= (dest[i].red    >> dampen_exponent);
+			dest[i].green  -= (dest[i].green  >> dampen_exponent);
+			dest[i].blue   -= (dest[i].blue   >> dampen_exponent);
 			dest[i].yellow -= (dest[i].yellow >> dampen_exponent);
         }
     }
