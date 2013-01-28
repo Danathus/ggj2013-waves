@@ -14,8 +14,32 @@ public class WaveField
 		return pixel.red + pixel.green + pixel.blue + pixel.yellow;
 	}
 	
-	public static float WavePixelAmplitude(Color enemyColor, WavePixel pixel){
-		return (pixel.red * enemyColor.r) + (pixel.green * enemyColor.g) + (pixel.blue * enemyColor.b) + (pixel.yellow + (enemyColor.r + enemyColor.g)/2);
+	public static float WavePixelAmplitude(Color enemyColor, WavePixel pixel)
+	{
+		//return (pixel.red * enemyColor.r) + (pixel.green * enemyColor.g) + (pixel.blue * enemyColor.b) + (pixel.yellow + (enemyColor.r + enemyColor.g)/2);
+		//
+		WavePixel temp = new WavePixel();
+		temp.red    = pixel.red;
+		temp.blue   = pixel.blue;
+		temp.green  = pixel.green;
+		temp.yellow = pixel.yellow;
+		temp = CrossPollinateIntensity(temp);
+		
+		return (temp.red * enemyColor.r) + (temp.green * enemyColor.g) + (temp.blue * enemyColor.b) + (temp.yellow + (enemyColor.r + enemyColor.g)/2);
+		
+		/*
+		scaled.red    = (int)(pixel.red * enemyColor.r);
+		scaled.blue   = (int)(pixel.blue  * enemyColor.b);
+		scaled.green  = (int)(pixel.green * enemyColor.g);
+		scaled.yellow = (int)((enemyColor.r + enemyColor.g)/2);
+		//scaled = CrossPollinateIntensity(scaled);
+		return WavePixelAmplitude(scaled);
+		//return
+		//	(pixel.red   * enemyColor.r) +
+		//	(pixel.green * enemyColor.g) +
+		//	(pixel.blue  * enemyColor.b) +
+		//	(pixel.yellow + (enemyColor.r + enemyColor.g)/2);
+		//*/
 	}
 	
 	readonly int WIDTH;
@@ -170,6 +194,85 @@ public class WaveField
 		tmpState2[HEIGHT/2 * WIDTH + WIDTH /2].yellow = intensity;//12;
     }
     //*/
+	
+	static public WavePixel CrossPollinateIntensity(WavePixel input)
+	{
+		WavePixel output = input;
+		int blue    = output.blue;
+		int red     = output.red;
+		int green   = output.green;
+		int yellow  = output.yellow;
+		int threshold  = 1 << 7;
+		int threshold2 = 1 << 8;
+		int threshold3 = 1 << 9;
+		if (red > threshold && blue > threshold)
+		{
+			output.red  += blue >> 5; // 5
+			output.blue += red  >> 5;
+		}
+		if (red > threshold && green > threshold)
+		{
+			output.red   += green >> 5; // 5
+			output.green += red   >> 5;
+		}
+		if (red > threshold && yellow > threshold)
+		{
+			output.red    += yellow >> 5; // 5
+			output.yellow += red    >> 5;
+		}
+		if (blue > threshold && green > threshold)
+		{
+			output.green  += blue >> 5; // 5
+			output.blue   += green  >> 5;
+		}
+		if (blue > threshold && yellow > threshold)
+		{
+			output.yellow  += blue >> 5; // 5
+			output.blue    += yellow  >> 5;
+		}
+		if (green > threshold && yellow > threshold)
+		{
+			output.green  += yellow >> 5; // 5
+			output.yellow += green  >> 5;
+		}
+		//*/
+		/*
+		if (red > threshold2 && blue > threshold2 && green > threshold2)
+		{
+			output.red   += (blue >> 6) + (green >> 6); // 5
+			output.blue  += (red  >> 6) + (green >> 6);
+			output.green += (red  >> 6) + (blue  >> 6);
+		}
+		if (red > threshold2 && blue > threshold2 && yellow > threshold2)
+		{
+			output.red    += (blue >> 6) + (yellow >> 6); // 5
+			output.blue   += (red  >> 6) + (yellow >> 6);
+			output.yellow += (red  >> 6) + (blue   >> 6);
+		}
+		if (green > threshold2 && blue > threshold2 && yellow > threshold2)
+		{
+			output.green  += (blue   >> 6) + (yellow >> 6); // 5
+			output.blue   += (green  >> 6) + (yellow >> 6);
+			output.yellow += (green  >> 6) + (blue   >> 6);
+		}
+		if (green > threshold2 && red > threshold2 && yellow > threshold2)
+		{
+			output.green  += (red    >> 6) + (yellow >> 6); // 5
+			output.red    += (green  >> 6) + (yellow >> 6);
+			output.yellow += (green  >> 6) + (blue   >> 6);
+		}
+		//*/
+		/*
+		if (green > threshold3 && red > threshold3 && yellow > threshold3 && blue > threshold3)
+		{
+			output.green  += (red    >> 7) + (yellow >> 7) + (blue >> 7); // 5
+			output.red    += (green  >> 7) + (yellow >> 7) + (blue >> 7);
+			output.yellow += (green  >> 7) + (blue   >> 7) + (red  >> 7);
+			output.blue   += (green  >> 7) + (yellow >> 7) + (red  >> 7);
+		}
+		//*/
+		return output;
+	}
 
 	// ------------------------------------------------------------------------
     void processWater(WavePixel[] source, WavePixel[] dest)
@@ -183,6 +286,7 @@ public class WaveField
 			dest[i].yellow = (((source[i-1].yellow + source[i+1].yellow + source[i-WIDTH].yellow + source[i+WIDTH].yellow) >> 1)) - dest[i].yellow;
 
 			// experimentation -- let colors combine powers
+			/*
 			int blue    = dest[i].blue;
 			int red     = dest[i].red;
 			int green   = dest[i].green;
@@ -220,6 +324,7 @@ public class WaveField
 				dest[i].green  += yellow >> 5; // 5
 				dest[i].yellow += green  >> 5;
 			}
+			//*/
 			/*
 			if (red > threshold2 && blue > threshold2 && green > threshold2)
 			{
@@ -277,15 +382,35 @@ public class WaveField
 			dest[i].green  -= (dest[i].green  >> dampen_exponent);
 			dest[i].blue   -= (dest[i].blue   >> dampen_exponent);
 			dest[i].yellow -= (dest[i].yellow >> dampen_exponent);
+			
+			// clamp to non-negative -- breaks shit!
+			//dest[i].red    = Mathf.Max(dest[i].red,    0);
+			//dest[i].green  = Mathf.Max(dest[i].green,  0);
+			//dest[i].blue   = Mathf.Max(dest[i].blue,   0);
+			//dest[i].yellow = Mathf.Max(dest[i].yellow, 0);
 
 			// if the colors are too powerful, clamp them
-			//*
-			int tooPowerful = (1 << 15);
-			dest[i].red    = Mathf.Min(dest[i].red,    tooPowerful);
-			dest[i].green  = Mathf.Min(dest[i].green,  tooPowerful);
-			dest[i].blue   = Mathf.Min(dest[i].blue,   tooPowerful);
-			dest[i].yellow = Mathf.Min(dest[i].yellow, tooPowerful);
+			/*
+			int tooPowerful = (1 << 16); // 13
+			if (WavePixelAmplitude(dest[i]) >  tooPowerful ||
+				WavePixelAmplitude(dest[i]) < -tooPowerful)
+			{
+				//dest[i].red    = Mathf.Min(dest[i].red,    tooPowerful/8);
+				//dest[i].green  = Mathf.Min(dest[i].green,  tooPowerful/8);
+				//dest[i].blue   = Mathf.Min(dest[i].blue,   tooPowerful/8);
+				//dest[i].yellow = Mathf.Min(dest[i].yellow, tooPowerful/8);
+				dest[i].red    = 0;//dest[i].red    >> 13; // 5, then 6
+				dest[i].green  = 0;//dest[i].green  >> 13;
+				dest[i].blue   = 0;//dest[i].blue   >> 13;
+				dest[i].yellow = 0;//dest[i].yellow >> 13;
+			}
 			//*/
+			
+			// if radius is too far, dampen
+			if (i%WIDTH == 0)
+			{
+				dest[i].red = dest[i].green = dest[i].blue = dest[i].yellow = 0;
+			}
         }
     }
 
